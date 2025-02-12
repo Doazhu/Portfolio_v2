@@ -9,6 +9,18 @@
   --azure-blue: #007BFF;
   --lime-green: #ADFF2F;
   --orange: #FF4500;
+
+  --white: #FFFFFF;
+  --light-grey: #F7F7F7;
+  --delicate-blue: #E6F7FF;
+  --black: #000000;
+  --dark-gray: #333333;
+  --blue: #007BFF;
+  --orange: #FFAA00;
+  --lavender-purple: #D2B4DE;
+  --mint-green: #2ECC71;
+  --red: #E74C3C; 
+
 }
 
 body {

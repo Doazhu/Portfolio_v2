@@ -31,12 +31,6 @@ body {
     width: 100%;
   }
   
-  section{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr ;
-  
-  }
-  
   h1 {
     font-size: 3rem;
     font-weight: 700;
@@ -48,6 +42,8 @@ body {
   }
   
   .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr ;
     margin-top: 3rem;
   }
   

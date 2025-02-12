@@ -38,7 +38,7 @@ const Footer = () => {
         <div className="footer-section">
           <h3 className="footer-subtitle">Контакты</h3>
           <p className="footer-text">Email: alexanderrenev07@gmail.com</p>
-          <p className="footer-text">Website: doazhu.com</p>
+          <p className="footer-text">Website: doazhu.ru</p>
         </div>
 
         <div className="footer-section">
@@ -52,8 +52,6 @@ const Footer = () => {
 
       <div className="footer-bottom">
         <p className="footer-text">© 2025 Doazhu. Все права защищены.</p>
-        <a href="#" className="footer-link">Условия использования</a>
-        <a href="#" className="footer-link">Политика конфиденциальности</a>
       </div>
     </footer>
   );
