@@ -10,9 +10,7 @@ app.add_middleware(
     allow_origins=["http://doazhu.ru", "https://doazhu.ru"],  
     allow_methods=["*"],
     allow_headers=["*"],
-))
+)
 
-# Пример данных
+
 @app.get("/api/items")
-def get_items():
-    return {"items": ["Apple", "Banana", "Cherry"]}

@@ -42,6 +42,8 @@ b{
 .image-container {
     border-radius: 0;
     background: none;
+
+    width: 100%;
 }
 
 .timeline-container{
