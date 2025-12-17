@@ -7,8 +7,6 @@
     margin-bottom: 1rem;
     font-family: var(--font-body);
     color: #FFFFFF;
-    overflow: hidden;
-    position: relative;
 }
 
 .nav-container {
@@ -18,27 +16,42 @@
 }
 
 .logo {
-    font-family: var(--font-heading);
-    font-size: 1.4rem;
-    font-weight: 400;
-    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 1rem;
     text-decoration: none;
-    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
 }
 
-.logo span {
+.console-log {
+    color: var(--light-gray);
+}
+
+.console-text {
     color: var(--toxic-yellow);
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 0;
+    border-right: 2px solid var(--toxic-yellow);
+    animation: typing 1.5s steps(16) 0.5s forwards, blink 0.7s step-end infinite;
+    vertical-align: bottom;
 }
 
-.logo:hover {
-    text-shadow: 0 0 20px rgba(204, 255, 0, 0.4);
+@keyframes typing {
+    0% { max-width: 0; }
+    100% { max-width: 200px; }
+}
+
+@keyframes blink {
+    0%, 100% { border-color: var(--toxic-yellow); }
+    50% { border-color: transparent; }
 }
 
 .nav-list {
     list-style: none;
     display: flex;
     align-items: center;
-    justify-content: end;
     font-weight: 500;
     font-size: 1rem;
     gap: 24px;
@@ -80,7 +93,7 @@
     }
     
     .logo {
-        font-size: 1.2rem;
+        font-size: 0.9rem;
     }
     
     .nav-list {

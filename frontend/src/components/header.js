@@ -7,7 +7,9 @@ function Header() {
         <header className="header">
             <div className="nav-container">
                 <Link to="/" className="logo">
-                    doazhu<span>.pro</span>
+                    <span className="console-log">console.log(</span>
+                    <span className="console-text">"Hey, im Doazhu"</span>
+                    <span className="console-log">);</span>
                 </Link>
                 <nav>
                     <ul className="nav-list">
