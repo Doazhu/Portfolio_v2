@@ -62,7 +62,7 @@ b {
 }
 
 .image-card img {
-    width: 280px;
+    width: 320px;
     height: auto;
     border-radius: 12px;
     display: block;
@@ -94,51 +94,137 @@ b {
     background: var(--void-black);
 }
 
-.skills-title {
-    padding: 2rem 6rem;
+.approach-section {
+    padding: 4rem 6rem 6rem;
+    background: var(--void-black);
+}
+
+.approach-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.approach-label {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--toxic-yellow);
+    margin-bottom: 1rem;
+    opacity: 0.8;
+}
+
+.approach-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--white);
     margin: 0;
-    background: var(--void-black);
 }
 
-.skills-section {
-    padding: 0 6rem 4rem;
-    background: var(--void-black);
-}
-
-.skills-container {
+.approach-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
-    max-width: 1200px;
+    max-width: 1100px;
     margin: 0 auto;
 }
 
-.skills-item {
+.approach-card {
+    position: relative;
     background: var(--dark-graphite);
-    padding: 2rem;
-    border-radius: 16px;
+    padding: 2.5rem;
+    border-radius: 20px;
     border: 1px solid rgba(204, 255, 0, 0.1);
+    overflow: hidden;
+    cursor: default;
+}
+
+.approach-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--accent, var(--toxic-yellow));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+}
+
+.approach-card:hover::before {
+    transform: scaleX(1);
+}
+
+.approach-card:hover {
+    border-color: var(--accent, var(--toxic-yellow));
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+.approach-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.approach-number {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    font-weight: 400;
+    color: var(--accent, var(--toxic-yellow));
+    opacity: 0.3;
+    line-height: 1;
+    transition: opacity 0.3s ease;
+}
+
+.approach-card:hover .approach-number {
+    opacity: 0.6;
+}
+
+.approach-icon {
+    font-size: 2rem;
+    line-height: 1;
+    filter: grayscale(100%);
+    opacity: 0.5;
     transition: all 0.3s ease;
 }
 
-.skills-item:hover {
-    border-color: var(--toxic-yellow);
-    box-shadow: 0 0 30px rgba(204, 255, 0, 0.1);
-    transform: translateY(-4px);
+.approach-card:hover .approach-icon {
+    filter: grayscale(0%);
+    opacity: 1;
+    transform: scale(1.1);
 }
 
-.skills-item h2 {
+.approach-card-title {
     font-family: 'Montserrat', sans-serif;
+    font-size: 1.4rem;
     font-weight: 600;
-    font-size: 1.3rem;
-    color: var(--toxic-yellow);
-    margin: 0.5rem 0 1rem;
+    color: var(--white);
+    margin: 0 0 1rem 0;
 }
 
-.skills-item p {
-    font-size: 0.95rem;
+.approach-card-text {
+    font-size: 1rem;
     line-height: 1.7;
     color: var(--light-gray);
+    margin: 0;
+}
+
+.approach-card-line {
+    position: absolute;
+    bottom: 0;
+    left: 2.5rem;
+    right: 2.5rem;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--accent, var(--toxic-yellow)), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.approach-card:hover .approach-card-line {
+    opacity: 0.3;
 }
 
 @media (max-width: 1000px) {
@@ -155,18 +241,22 @@ b {
     }
     
     .image-card img {
-        width: 220px;
+        width: 280px;
     }
     
-    .skills-title {
+    .approach-section {
+        padding: 3rem 2rem 4rem;
+    }
+    
+    .approach-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .approach-card {
         padding: 2rem;
     }
     
-    .skills-section {
-        padding: 0 2rem 3rem;
-    }
-    
-    .skills-container {
-        grid-template-columns: 1fr;
+    .approach-number {
+        font-size: 2.5rem;
     }
 }
