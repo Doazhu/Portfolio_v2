@@ -2,8 +2,8 @@ from sqladmin import Admin, ModelView
 from sqladmin.authentication import AuthenticationBackend
 from starlette.requests import Request
 
-from config import settings
-from models import Project, Skill, Message, Admin as AdminModel, Settings
+from core.config import settings
+from db.models import Project, Skill, Message, Admin as AdminModel, Settings
 
 
 class AdminAuth(AuthenticationBackend):
