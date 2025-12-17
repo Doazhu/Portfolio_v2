@@ -109,3 +109,7 @@ yarn-error.log
 *.bak
 *.backup
 .github
+
+# Uploads
+backend/uploads/
+uploads/

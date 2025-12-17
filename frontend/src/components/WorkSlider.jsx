@@ -1,51 +1,68 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useCallback } from 'react';
+import { projectsAPI, uploadsAPI } from '../api';
 import project1 from "../images/library_project.jpg";
 import project2 from "../images/portfolio_project.jpg";
 import project3 from "../images/omlette_project.jpg";
 import project4 from "../images/drive_project.jpg";
 import './WorkSlider.css';
 
-const works = [
+const fallbackWorks = [
     {
         id: 1,
-        image: project2,
+        image_url: project2,
         title: "Моё старое портфолио",
-        description: "Множество версий моего первого портфолио — от макета в Figma до рабочего сайта. Первый опыт создания персонального сайта."
+        description: "Множество версий моего первого портфолио — от макета в Figma до рабочего сайта."
     },
     {
         id: 2,
-        image: project1,
+        image_url: project1,
         title: "Библиотека",
-        description: "Первый проект на Django с полноценным CRUD функционалом, авторизацией пользователей и работой с базой данных."
+        description: "Первый проект на Django с полноценным CRUD функционалом."
     },
     {
         id: 3,
-        image: project3,
+        image_url: project3,
         title: "Рецепт отменного омлета",
-        description: "Моя самая первая вёрстка — простая страница, с которой началась карьера в веб-разработке."
+        description: "Моя самая первая вёрстка — простая страница."
     },
     {
         id: 4,
-        image: project4,
+        image_url: project4,
         title: "Облако Fylo",
-        description: "Landing page с современным дизайном и адаптивной вёрсткой. Практика работы с Flexbox и Grid."
+        description: "Landing page с современным дизайном и адаптивной вёрсткой."
     },
 ];
 
 const WorkSlider = () => {
+    const [works, setWorks] = useState(fallbackWorks);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [direction, setDirection] = useState(1);
+
+    useEffect(() => {
+        const loadProjects = async () => {
+            try {
+                const data = await projectsAPI.getAll(true);
+                if (data.length > 0) {
+                    setWorks(data);
+                    setCurrentIndex(0);
+                }
+            } catch (err) {
+                console.log("Используем fallback данные");
+            }
+        };
+        loadProjects();
+    }, []);
 
     const goNext = useCallback(() => {
         setDirection(1);
         setCurrentIndex(prev => (prev === works.length - 1 ? 0 : prev + 1));
-    }, []);
+    }, [works.length]);
 
     const goPrev = useCallback(() => {
         setDirection(-1);
         setCurrentIndex(prev => (prev === 0 ? works.length - 1 : prev - 1));
-    }, []);
+    }, [works.length]);
 
     useEffect(() => {
         const timer = setInterval(goNext, 6000);
@@ -76,7 +93,9 @@ const WorkSlider = () => {
                         <div className="slide-content">
                             <div className="slide-image-wrapper">
                                 <motion.img
-                                    src={works[currentIndex].image}
+                                    src={works[currentIndex].image_url?.startsWith("http") || works[currentIndex].image_url?.startsWith("/") 
+                                        ? uploadsAPI.getUrl(works[currentIndex].image_url)
+                                        : works[currentIndex].image_url}
                                     alt={works[currentIndex].title}
                                     initial={{ scale: 0.95, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}

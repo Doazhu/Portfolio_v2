@@ -76,6 +76,37 @@ main {
     margin: 0;
 }
 
+.tech-stack {
+    display: block;
+    font-size: 0.75rem;
+    color: rgba(204, 255, 0, 0.7);
+    margin-top: 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.work-card-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(204, 255, 0, 0.15);
+}
+
+.work-card-links a {
+    font-size: 0.875rem;
+    color: var(--toxic-yellow);
+    text-decoration: none;
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--toxic-yellow);
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.work-card-links a:hover {
+    background: var(--toxic-yellow);
+    color: var(--void-black);
+}
+
 @media (max-width: 900px) {
     .other-works {
         padding: 3rem 2rem;

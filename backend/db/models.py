@@ -8,6 +8,7 @@ class Project(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(200), nullable=False)
+    slug = Column(String(100), unique=True, nullable=False, index=True)
     description = Column(Text)
     image_url = Column(String(500))
     github_url = Column(String(500))
@@ -16,6 +17,7 @@ class Project(Base):
     is_featured = Column(Boolean, default=False)
     order = Column(Integer, default=0)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     def __str__(self):
         return self.title
