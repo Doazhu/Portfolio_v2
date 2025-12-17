@@ -6,12 +6,8 @@ function Header() {
     return (
         <header className="header">
             <div className="nav-container">
-                <Link to="/" className="home">
-                <div className="console-log">
-                    <span>console.log(</span>
-                    <span className="text">"Hey, im Doazhu"</span>
-                    <span>);</span>
-                </div>
+                <Link to="/" className="logo">
+                    doazhu<span>.pro</span>
                 </Link>
                 <nav>
                     <ul className="nav-list">

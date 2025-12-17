@@ -1,11 +1,11 @@
 .header {
     background-color: #0a0a0a;
-    padding: 20px 20px;
+    padding: 20px 24px;
     border-radius: 1rem;
     margin-inline: 2rem;
     margin-top: 1rem;
     margin-bottom: 1rem;
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-body);
     color: #FFFFFF;
     overflow: hidden;
     position: relative;
@@ -15,41 +15,23 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    overflow: hidden;
 }
 
-.console-log {
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    overflow: hidden;
-    color: var(--toxic-yellow);
-    font-family: 'Roboto Mono', monospace;
-}
-
-.home {
+.logo {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--white);
     text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.logo span {
     color: var(--toxic-yellow);
 }
 
-.text {
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    width: 0;
-    border-right: 2px solid var(--toxic-yellow);
-    animation: typing 2s steps(16) forwards, blink 0.6s step-end infinite;
-    animation-delay: 0.3s, 0.3s;
-}
-
-@keyframes typing {
-    from { width: 0; }
-    to { width: 16ch; }
-}
-
-@keyframes blink {
-    0%, 100% { border-color: var(--toxic-yellow); }
-    50% { border-color: transparent; }
+.logo:hover {
+    text-shadow: 0 0 20px rgba(204, 255, 0, 0.4);
 }
 
 .nav-list {
@@ -58,27 +40,14 @@
     align-items: center;
     justify-content: end;
     font-weight: 500;
-    font-size: 18px;
-    gap: 20px;
+    font-size: 1rem;
+    gap: 24px;
     margin: 0;
     padding: 0;
-    opacity: 0;
-    transform: translateY(0);
-    animation: fadeIn 0.8s ease-out forwards;
-    animation-delay: 0.5s;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
 }
 
 .link {
-    color: #E0E0E0;
+    color: var(--light-gray);
     text-decoration: none;
     position: relative;
     padding: 4px 0;
@@ -104,6 +73,18 @@
     width: 100%;
 }
 
-.title {
-    margin: 0;
+@media (max-width: 600px) {
+    .header {
+        margin-inline: 1rem;
+        padding: 16px 20px;
+    }
+    
+    .logo {
+        font-size: 1.2rem;
+    }
+    
+    .nav-list {
+        gap: 16px;
+        font-size: 0.9rem;
+    }
 }
