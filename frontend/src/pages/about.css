@@ -36,39 +36,58 @@ b {
 
 .about-section {
     display: grid;
-    grid-template-columns: 0.4fr 0.6fr;
+    grid-template-columns: auto 1fr;
     gap: 4rem;
     padding: 4rem 6rem;
     background: var(--void-black);
+    align-items: start;
+}
+
+.image-container {
+    position: sticky;
+    top: 120px;
+}
+
+.image-card {
+    background: var(--dark-graphite);
+    padding: 1.5rem;
+    border-radius: 20px;
+    border: 1px solid rgba(204, 255, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.image-card:hover {
+    border-color: var(--toxic-yellow);
+    box-shadow: 0 0 40px rgba(204, 255, 0, 0.1);
+}
+
+.image-card img {
+    width: 280px;
+    height: auto;
+    border-radius: 12px;
+    display: block;
+}
+
+.image-card-label {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--medium-gray);
+}
+
+.image-card-label span {
+    color: var(--toxic-yellow);
+    font-weight: 500;
 }
 
 .about-text {
-    max-width: 800px;
+    max-width: 700px;
 }
 
 .about-text p {
     line-height: 1.8;
     font-size: 1.05rem;
     margin-bottom: 1.5rem;
-}
-
-.image-container {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-}
-
-.image-container img {
-    width: 100%;
-    max-width: 350px;
-    height: auto;
-    border-radius: 16px;
-    filter: grayscale(20%);
-    transition: filter 0.3s ease;
-}
-
-.image-container img:hover {
-    filter: grayscale(0%);
 }
 
 .timeline-container {
@@ -90,7 +109,7 @@ b {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -122,7 +141,7 @@ b {
     color: var(--light-gray);
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1000px) {
     .about-section {
         grid-template-columns: 1fr;
         padding: 3rem 2rem;
@@ -130,7 +149,13 @@ b {
     }
     
     .image-container {
-        order: -1;
+        position: static;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .image-card img {
+        width: 220px;
     }
     
     .skills-title {

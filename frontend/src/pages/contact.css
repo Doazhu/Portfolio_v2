@@ -1,110 +1,227 @@
-body {
-    background-color: var(--void-black);
-    color: var(--white);
+.contact-page {
+    background: var(--void-black);
     min-height: 100vh;
 }
 
-.contact-section {
-    max-width: 700px;
-    margin: 4rem auto;
-    padding: 3rem;
-    background: var(--dark-graphite);
-    border-radius: 20px;
-    border: 1px solid rgba(204, 255, 0, 0.15);
-    box-shadow: 0 0 40px rgba(204, 255, 0, 0.05);
+.contact-main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
 }
 
-.contact-section h1 {
+.contact-hero {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.contact-label {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--toxic-yellow);
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+}
+
+.contact-title {
     font-family: var(--font-heading);
-    color: var(--toxic-yellow);
-    font-size: 3rem;
-    margin-bottom: 2rem;
-    text-shadow: 0 0 30px rgba(204, 255, 0, 0.3);
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 400;
+    color: var(--white);
+    margin: 0 0 1.5rem 0;
+    line-height: 1.2;
 }
 
-.contact-section p {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    margin: 1.5rem 0;
-    color: var(--light-gray);
+.contact-title .highlight {
+    color: var(--toxic-yellow);
 }
 
-.contact-section a {
-    color: var(--toxic-yellow);
+.contact-subtitle {
+    font-size: 1.2rem;
+    color: var(--medium-gray);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+}
+
+.contact-card {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.5rem 2rem;
+    background: var(--dark-graphite);
+    border-radius: 16px;
+    border: 1px solid rgba(204, 255, 0, 0.1);
     text-decoration: none;
-    position: relative;
     transition: all 0.3s ease;
 }
 
-.contact-section a:hover {
-    color: var(--neon-lemon);
-    text-shadow: 0 0 12px rgba(204, 255, 0, 0.5);
-}
-
-.contact-section a::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--toxic-yellow);
-    transition: width 0.3s ease;
-}
-
-.contact-section a:hover::after {
-    width: 100%;
-}
-
-.contact-form {
-    margin-top: 2rem;
-}
-
-.contact-form input,
-.contact-form textarea {
-    width: 100%;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    background: var(--void-black);
-    border: 1px solid rgba(204, 255, 0, 0.2);
-    border-radius: 8px;
-    color: var(--white);
-    font-family: var(--font-body);
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
-}
-
-.contact-form input:focus,
-.contact-form textarea:focus {
-    outline: none;
+.contact-card:hover {
     border-color: var(--toxic-yellow);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(204, 255, 0, 0.1);
 }
 
-.contact-form button {
-    width: 100%;
-    padding: 1rem;
-    background: var(--toxic-yellow);
-    color: var(--void-black);
-    border: none;
-    border-radius: 8px;
+.contact-card-icon {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.contact-card-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.contact-card-label {
+    font-size: 0.85rem;
+    color: var(--medium-gray);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.contact-card-value {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--white);
+}
+
+.contact-card-arrow {
+    width: 24px;
+    height: 24px;
+    color: var(--medium-gray);
+    transition: all 0.3s ease;
+}
+
+.contact-card:hover .contact-card-arrow {
+    color: var(--toxic-yellow);
+    transform: translate(4px, -4px);
+}
+
+.contact-cta {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.cta-card {
+    background: var(--dark-graphite);
+    padding: 2.5rem;
+    border-radius: 20px;
+    border: 1px solid rgba(204, 255, 0, 0.15);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.cta-card:hover {
+    border-color: var(--toxic-yellow);
+    box-shadow: 0 0 40px rgba(204, 255, 0, 0.1);
+}
+
+.cta-emoji {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+.cta-card h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
     font-weight: 600;
+    color: var(--white);
+    margin: 0 0 0.75rem 0;
+}
+
+.cta-card p {
     font-size: 1rem;
+    color: var(--medium-gray);
+    margin: 0 0 1.5rem 0;
+    line-height: 1.5;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: transparent;
+    border: 1px solid var(--toxic-yellow);
+    border-radius: 50px;
+    color: var(--toxic-yellow);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.contact-form button:hover {
-    background: var(--neon-lemon);
+.cta-button:hover {
+    background: var(--toxic-yellow);
+    color: var(--void-black);
     box-shadow: 0 0 20px rgba(204, 255, 0, 0.4);
 }
 
-@media (max-width: 768px) {
-    .contact-section {
-        margin: 2rem 1rem;
-        padding: 2rem;
+.cta-telegram {
+    background: var(--toxic-yellow);
+    color: var(--void-black);
+}
+
+.cta-telegram:hover {
+    box-shadow: 0 0 30px rgba(204, 255, 0, 0.5);
+    transform: scale(1.02);
+}
+
+.contact-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    color: var(--medium-gray);
+    font-size: 0.95rem;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    background: var(--toxic-yellow);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { 
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(204, 255, 0, 0.4);
+    }
+    50% { 
+        opacity: 0.8;
+        box-shadow: 0 0 0 10px rgba(204, 255, 0, 0);
+    }
+}
+
+@media (max-width: 700px) {
+    .contact-main {
+        padding: 3rem 1.5rem;
     }
     
-    .contact-section h1 {
-        font-size: 2rem;
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .contact-cta {
+        grid-template-columns: 1fr;
+    }
+    
+    .cta-card {
+        padding: 2rem;
     }
 }

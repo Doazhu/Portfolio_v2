@@ -13,7 +13,7 @@
 
 .timeline {
     position: relative;
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 2rem 0;
 }
@@ -25,13 +25,13 @@
     transform: translateX(-50%);
     width: 2px;
     height: 100%;
-    background: linear-gradient(to bottom, var(--toxic-yellow), transparent);
+    background: linear-gradient(to bottom, var(--toxic-yellow), var(--dark-graphite));
 }
 
 .timeline-item {
     display: flex;
     justify-content: flex-end;
-    padding-right: calc(50% + 30px);
+    padding-right: calc(50% + 40px);
     position: relative;
     margin-bottom: 3rem;
 }
@@ -39,7 +39,7 @@
 .timeline-item:nth-child(even) {
     justify-content: flex-start;
     padding-right: 0;
-    padding-left: calc(50% + 30px);
+    padding-left: calc(50% + 40px);
 }
 
 .timeline-item::before {
@@ -47,12 +47,12 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     background: var(--toxic-yellow);
     border-radius: 50%;
     box-shadow: 0 0 20px rgba(204, 255, 0, 0.5);
-    top: 20px;
+    top: 24px;
 }
 
 .timeline-content {
@@ -60,7 +60,7 @@
     padding: 1.5rem 2rem;
     border-radius: 16px;
     border: 1px solid rgba(204, 255, 0, 0.15);
-    max-width: 450px;
+    max-width: 400px;
     transition: all 0.3s ease;
 }
 
@@ -72,15 +72,15 @@
 
 .timeline-title {
     font-family: 'Montserrat', sans-serif;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 600;
-    color: var(--toxic-yellow);
+    color: var(--white);
     margin: 0 0 0.75rem 0;
 }
 
 .timeline-description {
     font-family: 'Montserrat', sans-serif;
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: var(--light-gray);
     margin: 0 0 1rem 0;
     line-height: 1.6;
@@ -89,12 +89,46 @@
 .timeline-year {
     display: inline-block;
     font-family: 'Montserrat', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 700;
+    font-size: 0.8rem;
+    font-weight: 600;
     background: var(--toxic-yellow);
     color: var(--void-black);
     padding: 0.4rem 1rem;
     border-radius: 20px;
+}
+
+.timeline-continue {
+    margin-bottom: 0;
+}
+
+.timeline-future {
+    background: transparent;
+    border: 2px dashed rgba(204, 255, 0, 0.4);
+    text-align: center;
+}
+
+.timeline-future:hover {
+    border-color: var(--toxic-yellow);
+    background: rgba(204, 255, 0, 0.05);
+}
+
+.future-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.timeline-future .timeline-title {
+    color: var(--toxic-yellow);
+}
+
+.timeline-future .timeline-description {
+    margin-bottom: 0;
 }
 
 @media (max-width: 900px) {

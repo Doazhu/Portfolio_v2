@@ -99,16 +99,16 @@ function Home() {
                     
                     <div className="showcase-stats">
                         <div className="stat-item">
-                            <span className="stat-number">2+</span>
-                            <span className="stat-label">года в разработке</span>
+                            <span className="stat-number">5</span>
+                            <span className="stat-label">лет в разработке</span>
                         </div>
                         <div className="stat-item">
-                            <span className="stat-number">10+</span>
+                            <span className="stat-number">119+</span>
                             <span className="stat-label">проектов</span>
                         </div>
                         <div className="stat-item">
-                            <span className="stat-number">∞</span>
-                            <span className="stat-label">желание учиться</span>
+                            <span className="stat-number">24/7</span>
+                            <span className="stat-label">на связи</span>
                         </div>
                     </div>
                 </div>
