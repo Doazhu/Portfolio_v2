@@ -1,6 +1,27 @@
 version: '3.8'
 
 services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=false
+      - DATABASE_URL=postgres://portfolio:portfolio@db:5432/portfolio
+      - REDIS_URL=redis://redis:6379
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-changeme}
+      - SECRET_KEY=${SECRET_KEY:-change-this-in-production}
+      - CORS_ORIGINS=["https://doazhu.pro","http://localhost:3000"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - portfolio
+
   frontend:
     build: ./frontend
     ports:
@@ -8,13 +29,39 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
+    networks:
+      - portfolio
 
-  backend:
-    build: ./backend
-    ports:
-      - "8000:8000"
+  db:
+    image: postgres:16-alpine
     environment:
-      - PYTHONUNBUFFERED=1
+      - POSTGRES_USER=portfolio
+      - POSTGRES_PASSWORD=portfolio
+      - POSTGRES_DB=portfolio
     volumes:
-      - ./backend:/app
-    restart: unless-stopped 
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U portfolio"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - portfolio
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - portfolio
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  portfolio:
+    driver: bridge
+
