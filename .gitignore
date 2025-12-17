@@ -113,3 +113,8 @@ yarn-error.log
 # Uploads
 backend/uploads/
 uploads/
+
+# SSL certificates (keep .gitkeep)
+nginx/ssl/*.pem
+nginx/ssl/*.key
+nginx/ssl/*.crt

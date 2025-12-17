@@ -1,0 +1,70 @@
+version: '3.8'
+
+# Создай .env в корне проекта перед деплоем:
+# DB_PASSWORD=xxx
+# ADMIN_USERNAME=admin  
+# ADMIN_PASSWORD=xxx
+# SECRET_KEY=xxx
+
+services:
+  nginx:
+    build:
+      context: ./frontend
+      args:
+        REACT_APP_API_URL: https://doazhu.pro
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - portfolio
+
+  backend:
+    build: ./backend
+    expose:
+      - "8000"
+    environment:
+      - DEBUG=false
+      - DATABASE_URL=postgresql+asyncpg://portfolio:${DB_PASSWORD}@db:5432/portfolio
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - SECRET_KEY=${SECRET_KEY}
+      - CORS_ORIGINS=["https://doazhu.pro","https://www.doazhu.pro"]
+    volumes:
+      - uploads_data:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - portfolio
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=portfolio
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=portfolio
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U portfolio"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - portfolio
+
+volumes:
+  postgres_data:
+  uploads_data:
+
+networks:
+  portfolio:
+    driver: bridge

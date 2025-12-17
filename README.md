@@ -1,35 +1,37 @@
 
-## Backend
+## 🚀 Production Deploy (doazhu.pro)
 
----
-
-### 🚀 Production Deploy
+### Быстрый деплой
 
 ```bash
 # 1. Создай .env файл
-cp backend/.env.example .env
+cp .env.example .env
+nano .env  # Заполни DB_PASSWORD, ADMIN_PASSWORD, SECRET_KEY
 
-# 2. Отредактируй .env (ОБЯЗАТЕЛЬНО!)
-nano .env
-# Измени: ADMIN_PASSWORD, SECRET_KEY
+# 2. Положи SSL сертификаты от Timeweb
+cp /path/to/fullchain.pem nginx/ssl/
+cp /path/to/privkey.pem nginx/ssl/
 
-# 3. Запусти всё
-docker-compose up -d --build
-
-# Проверка
-curl http://localhost:8000/health
+# 3. Запусти деплой
+./deploy.sh
 ```
 
-**Переменные окружения (.env):**
+### Переменные окружения (.env)
 ```env
-DEBUG=false
-DATABASE_URL=postgres://portfolio:portfolio@db:5432/portfolio
-REDIS_URL=redis://redis:6379
+DB_PASSWORD=your_secure_db_password
 ADMIN_USERNAME=admin
-ADMIN_PASSWORD=your-secure-password
-SECRET_KEY=openssl-rand-hex-32-output
-CORS_ORIGINS=["https://doazhu.pro"]
+ADMIN_PASSWORD=your_secure_admin_password
+SECRET_KEY=openssl_rand_hex_32_output
 ```
+
+### Структура деплоя
+- **nginx** — reverse proxy + SSL + статика фронтенда
+- **backend** — FastAPI на Gunicorn
+- **db** — PostgreSQL 16
+
+---
+
+## Backend
 
 ---
 

@@ -1,10 +1,92 @@
 from sqladmin import Admin, ModelView
 from sqladmin.authentication import AuthenticationBackend
 from starlette.requests import Request
+from starlette.responses import RedirectResponse
 from markupsafe import Markup
+from wtforms import StringField
+from wtforms.widgets import TextInput
 
 from core.config import settings
 from db.models import Project, Skill, Message, Admin as AdminModel, Settings
+
+
+class ImageUploadWidget(TextInput):
+    """Кастомный виджет для загрузки изображений"""
+    
+    def __call__(self, field, **kwargs):
+        kwargs.setdefault('type', 'text')
+        kwargs['class'] = kwargs.get('class', '') + ' form-control'
+        kwargs['id'] = field.id
+        
+        current_value = field.data or ''
+        preview_html = ''
+        if current_value:
+            preview_html = f'''
+                <div style="margin-top:10px;">
+                    <img src="{current_value}" style="max-height:150px;border-radius:8px;border:1px solid #374151;" 
+                         onerror="this.style.display='none'">
+                </div>
+            '''
+        
+        return Markup(f'''
+            <div class="image-upload-container">
+                <div style="display:flex;gap:10px;align-items:center;">
+                    <input type="text" name="{field.name}" value="{current_value}" 
+                           class="form-control" id="{field.id}" placeholder="/uploads/filename.jpg"
+                           style="flex:1;">
+                    <label style="background:#6366f1;color:white;padding:8px 16px;border-radius:6px;cursor:pointer;white-space:nowrap;">
+                        📤 Загрузить
+                        <input type="file" accept="image/*" style="display:none;" 
+                               onchange="uploadImage_{field.id}(this)">
+                    </label>
+                </div>
+                <div id="preview_{field.id}">{preview_html}</div>
+                <div id="progress_{field.id}" style="display:none;margin-top:10px;">
+                    <div style="background:#1f2937;border-radius:4px;overflow:hidden;height:6px;">
+                        <div id="progressbar_{field.id}" style="background:#6366f1;height:100%;width:0%;transition:width 0.3s;"></div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                async function uploadImage_{field.id}(input) {{
+                    if (!input.files || !input.files[0]) return;
+                    
+                    const file = input.files[0];
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    
+                    const progress = document.getElementById('progress_{field.id}');
+                    const progressBar = document.getElementById('progressbar_{field.id}');
+                    const preview = document.getElementById('preview_{field.id}');
+                    const urlInput = document.getElementById('{field.id}');
+                    
+                    progress.style.display = 'block';
+                    progressBar.style.width = '30%';
+                    
+                    try {{
+                        const response = await fetch('/api/uploads', {{
+                            method: 'POST',
+                            body: formData
+                        }});
+                        
+                        progressBar.style.width = '100%';
+                        
+                        if (response.ok) {{
+                            const data = await response.json();
+                            urlInput.value = data.url;
+                            preview.innerHTML = '<div style="margin-top:10px;"><img src="' + data.url + '" style="max-height:150px;border-radius:8px;border:1px solid #374151;"></div>';
+                        }} else {{
+                            const err = await response.json();
+                            alert('Ошибка: ' + (err.detail || 'Не удалось загрузить'));
+                        }}
+                    }} catch (e) {{
+                        alert('Ошибка загрузки: ' + e.message);
+                    }}
+                    
+                    setTimeout(() => {{ progress.style.display = 'none'; }}, 500);
+                }}
+            </script>
+        ''')
 
 
 class AdminAuth(AuthenticationBackend):
@@ -52,15 +134,23 @@ class ProjectAdmin(ModelView, model=Project):
     
     column_formatters = {
         Project.image_url: lambda m, a: Markup(
-            f'<img src="/uploads/{m.image_url.split("/")[-1]}" style="max-height:50px;border-radius:4px;">'
+            f'<img src="{m.image_url}" style="max-height:50px;border-radius:4px;">'
         ) if m.image_url else "-",
         Project.is_featured: lambda m, a: "⭐" if m.is_featured else "",
         Project.slug: lambda m, a: Markup(f'<code style="color:#6366f1;">{m.slug}</code>') if m.slug else "-",
     }
     
+    form_overrides = {
+        "image_url": StringField,
+    }
+    
+    form_widget_args = {
+        "image_url": {"widget": ImageUploadWidget()},
+    }
+    
     form_args = {
         "slug": {"description": "Уникальный URL-идентификатор (только a-z, 0-9, -)"},
-        "image_url": {"description": "Путь к изображению: /uploads/filename.jpg — загрузите через /api/uploads"},
+        "image_url": {"widget": ImageUploadWidget()},
         "live_url": {"description": "URL для поддомена: https://project.doazhu.pro"},
         "tech_stack": {"description": "Через запятую: React, FastAPI, PostgreSQL"},
     }
