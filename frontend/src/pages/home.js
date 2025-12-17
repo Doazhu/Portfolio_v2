@@ -7,38 +7,35 @@ import { Link } from "react-router-dom";
 function Home() {
     return (
         <div className="home-page">
+            <SpiralRibbon />
             <Header />
-            <main>
-                <section className="hero">
-                    <div className="hero-image"></div>
+            <main className="hero-main">
+                <div className="hero-content">
+                    <h1 className="hero-title fade-in-up">
+                        <span className="greeting">Привет</span>
+                        <span className="wave">👋</span>
+                    </h1>
                     
-                    <div className="hero-text">
-                        <h1 className="fade-in-up">Привет👋,</h1>
-                        <p className="fade-in-up">
-                            я Александр, fullstack разработчик
-                        </p>
-                        <span className="text-hero fade-in-up">
-                            Создавая решения, которые вдохновляют.
-                        </span>
+                    <p className="hero-subtitle fade-in-up">
+                        Я <span className="highlight">Александр</span>, fullstack разработчик
+                    </p>
+                    
+                    <p className="hero-tagline fade-in-up">
+                        Создаю решения, которые вдохновляют
+                    </p>
 
-                        <Link to="/about" className="about-me-link fade-in-up">
-                            <div className="about-me">
-                                <div>
-                                    <p>Обо мне</p>
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 48 24"
-                                        width="48px"
-                                        height="20px"
-                                    >
-                                        <path d="M48 6L24 22 0 6 4 2 24 18 44 2z" fill="currentColor" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </Link>
-                    </div>
-                </section>
-                <SpiralRibbon />
+                    <Link to="/about" className="hero-cta fade-in-up">
+                        <span>Узнать больше</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                        </svg>
+                    </Link>
+                </div>
+                
+                <div className="scroll-hint fade-in-up">
+                    <span>scroll</span>
+                    <div className="scroll-line"></div>
+                </div>
             </main>
         </div>
     );

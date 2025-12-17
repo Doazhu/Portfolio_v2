@@ -1,106 +1,163 @@
 .home-page {
     min-height: 100vh;
-    overflow: hidden;
     background-color: var(--void-black);
-}
-
-.home-page main {
-    margin: 4rem;
-    width: calc(100% - 8rem);
     position: relative;
+    overflow: hidden;
 }
 
-.home-page h1 {
-    font-family: var(--font-heading);
-    font-size: 4rem;
-    font-weight: 400;
-    color: var(--toxic-yellow);
-    margin: 0 0 1rem 0;
-}
-
-.home-page p {
-    font-size: 1.4rem;
-    font-weight: 300;
-    margin: 0 0 1rem 0;
-}
-
-.hero {
-    display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: 4rem;
-    margin-top: 2rem;
-    align-items: start;
-}
-
-.hero-image {
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    height: 60vh;
+.spiral-container {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
 }
 
-.hero-text {
+.spiral-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.hero-main {
+    position: relative;
+    z-index: 2;
+    min-height: calc(100vh - 100px);
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 4rem;
+}
+
+.hero-content {
+    text-align: center;
+    max-width: 800px;
+}
+
+.hero-title {
+    font-family: var(--font-heading);
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 400;
+    color: var(--white);
+    margin: 0 0 1.5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 0.5rem;
 }
 
-.text-hero {
-    display: block;
-    margin-top: 2rem;
-    font-size: 1.3rem;
-    font-weight: 400;
+.greeting {
+    background: linear-gradient(135deg, var(--toxic-yellow), var(--neon-lemon));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.wave {
+    display: inline-block;
+    animation: wave 2s ease-in-out infinite;
+    transform-origin: 70% 70%;
+}
+
+@keyframes wave {
+    0%, 100% { transform: rotate(0deg); }
+    10% { transform: rotate(14deg); }
+    20% { transform: rotate(-8deg); }
+    30% { transform: rotate(14deg); }
+    40% { transform: rotate(-4deg); }
+    50%, 100% { transform: rotate(0deg); }
+}
+
+.hero-subtitle {
+    font-family: var(--font-body);
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    font-weight: 300;
+    color: var(--light-gray);
+    margin: 0 0 1rem 0;
+}
+
+.highlight {
     color: var(--toxic-yellow);
-    text-shadow: 0 0 20px rgba(204, 255, 0, 0.3);
+    font-weight: 500;
 }
 
-.about-me {
-    display: flex;
-    justify-content: flex-start;
+.hero-tagline {
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    font-weight: 300;
+    color: var(--medium-gray);
+    margin: 0 0 3rem 0;
+    letter-spacing: 0.5px;
+}
+
+.hero-cta {
+    display: inline-flex;
     align-items: center;
-    margin-top: 3rem;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    background: transparent;
+    border: 1px solid var(--toxic-yellow);
+    border-radius: 50px;
+    color: var(--toxic-yellow);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
 }
 
-.about-me div {
+.hero-cta svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+}
+
+.hero-cta:hover {
+    background: var(--toxic-yellow);
+    color: var(--void-black);
+    box-shadow: 0 0 30px rgba(204, 255, 0, 0.4);
+}
+
+.hero-cta:hover svg {
+    transform: translate(4px, -4px);
+}
+
+.scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-.about-me p {
-    font-size: 14px;
-    margin: 0;
-    padding: 0;
+    gap: 0.5rem;
     color: var(--medium-gray);
-    transition: color 0.3s ease;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
-.about-me-link {
-    text-decoration: none;
+.scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--toxic-yellow), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
 }
 
-.about-me-link:hover .about-me p {
-    color: var(--toxic-yellow);
-}
-
-.about-me svg {
-    margin-top: 8px;
-    fill: var(--medium-gray);
-    transition: fill 0.3s ease, transform 0.3s ease;
-}
-
-.about-me-link:hover svg {
-    fill: var(--toxic-yellow);
-    transform: translateY(4px);
+@keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; height: 40px; }
+    50% { opacity: 1; height: 60px; }
 }
 
 @keyframes fadeInUp {
-    0% {
+    from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(40px);
     }
-    100% {
+    to {
         opacity: 1;
         transform: translateY(0);
     }
@@ -108,40 +165,40 @@
 
 .fade-in-up {
     opacity: 0;
-    animation-name: fadeInUp;
-    animation-duration: 0.8s;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-    animation-fill-mode: forwards;
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.hero-text h1 {
-    animation-delay: 0.1s;
+.hero-title.fade-in-up {
+    animation-delay: 0.2s;
 }
 
-.hero-text p {
-    animation-delay: 0.25s;
-}
-
-.hero-text .text-hero {
+.hero-subtitle.fade-in-up {
     animation-delay: 0.4s;
 }
 
-.hero-text .about-me-link {
-    animation-delay: 0.55s;
+.hero-tagline.fade-in-up {
+    animation-delay: 0.6s;
 }
 
-@media (max-width: 900px) {
-    .hero {
-        grid-template-columns: 1fr;
-        gap: 2rem;
+.hero-cta.fade-in-up {
+    animation-delay: 0.8s;
+}
+
+.scroll-hint.fade-in-up {
+    animation-delay: 1.2s;
+}
+
+@media (max-width: 768px) {
+    .hero-main {
+        padding: 2rem;
     }
     
-    .home-page main {
-        margin: 2rem;
-        width: calc(100% - 4rem);
+    .hero-cta {
+        padding: 0.875rem 1.5rem;
+        font-size: 0.9rem;
     }
     
-    .home-page h1 {
-        font-size: 2.5rem;
+    .scroll-hint {
+        display: none;
     }
 }
