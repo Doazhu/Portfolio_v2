@@ -1,139 +1,147 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: hidden;
-}
-
-#root {
-  min-height: 100vh;
-  overflow: hidden;
-}
-
-body {
-    background-color: #121212;;
-    font-family: 'Roboto', sans-serif;
-  
-    color: #D3D3D3;
-  
+.home-page {
+    min-height: 100vh;
     overflow: hidden;
-  
-    scroll-behavior: smooth;
-  
-  
-    margin: 0;
-    height: 100%;
-  }
-  
-  
-  main {
+    background-color: var(--void-black);
+}
+
+.home-page main {
     margin: 4rem;
-    width: 100%;
-  }
-  
-  h1 {
-    font-size: 3rem;
-    font-weight: 700;
-  }
-  
-  p {
-    font-size: 1.5rem;
+    width: calc(100% - 8rem);
+    position: relative;
+}
+
+.home-page h1 {
+    font-family: var(--font-heading);
+    font-size: 4rem;
     font-weight: 400;
-  }
-  
-  .hero {
+    color: var(--toxic-yellow);
+    margin: 0 0 1rem 0;
+}
+
+.home-page p {
+    font-size: 1.4rem;
+    font-weight: 300;
+    margin: 0 0 1rem 0;
+}
+
+.hero {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr ;
-    margin-top: 3rem;
-  }
-  
-  .hero-image {
+    grid-template-columns: 1fr 1.5fr;
+    gap: 4rem;
+    margin-top: 2rem;
+    align-items: start;
+}
+
+.hero-image {
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    height: 80vh;
-    width: 80%;
-  }
-  
-  .text-hero {
-    display: block; 
-    margin-top: 30rem; 
-    align-items: center;
-    justify-content: center;
-  
-    font-size: 1.5rem;
+    height: 60vh;
+    width: 100%;
+}
+
+.hero-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.text-hero {
+    display: block;
+    margin-top: 2rem;
+    font-size: 1.3rem;
     font-weight: 400;
-    background: linear-gradient(to right, #00FFFF, #FF00FF);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  
-  .about-me {
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    margin: auto; 
-  }
-  
-  .about-me div {
-    margin-top: 1rem;
-  }
-  
-  .about-me p {
-    font-size: 16px; 
-    margin: 6px; 
+    color: var(--toxic-yellow);
+    text-shadow: 0 0 20px rgba(204, 255, 0, 0.3);
+}
+
+.about-me {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 3rem;
+}
+
+.about-me div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.about-me p {
+    font-size: 14px;
+    margin: 0;
     padding: 0;
-    color: #d3d3d365;
-  }
-  
-  .about-me a,
-  .about-me a:hover,
-  .about-me a:visited {
+    color: var(--medium-gray);
+    transition: color 0.3s ease;
+}
+
+.about-me-link {
     text-decoration: none;
-    color: #d3d3d365;
-    border-bottom: none;
-  }
-  
-  .about-me svg {
-    margin-top: 8px; 
-  }
-  
-  
-  .about-me-link {
-    text-decoration: none;
-    color: #d3d3d365;
-    border-bottom: none;
-  }
-  
-  @keyframes fadeInUp {
+}
+
+.about-me-link:hover .about-me p {
+    color: var(--toxic-yellow);
+}
+
+.about-me svg {
+    margin-top: 8px;
+    fill: var(--medium-gray);
+    transition: fill 0.3s ease, transform 0.3s ease;
+}
+
+.about-me-link:hover svg {
+    fill: var(--toxic-yellow);
+    transform: translateY(4px);
+}
+
+@keyframes fadeInUp {
     0% {
-      opacity: 0;       
-      transform: translateY(40px);  
+        opacity: 0;
+        transform: translateY(30px);
     }
     100% {
-      opacity: 1;         
-      transform: translateY(0);    
+        opacity: 1;
+        transform: translateY(0);
     }
-  }
-  
-  .fade-in-up {
-    opacity: 0;                
-    animation-name: fadeInUp;   
-    animation-duration: 1s;     
-    animation-timing-function: ease-in-out;
-    animation-fill-mode: forwards;          
-  }
-  
-  .hero-text h1 {
-    animation-delay: 0.2s;
-  }
-  
-  .hero-text p {
+}
+
+.fade-in-up {
+    opacity: 0;
+    animation-name: fadeInUp;
+    animation-duration: 0.8s;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-fill-mode: forwards;
+}
+
+.hero-text h1 {
+    animation-delay: 0.1s;
+}
+
+.hero-text p {
+    animation-delay: 0.25s;
+}
+
+.hero-text .text-hero {
     animation-delay: 0.4s;
-  }
-  
-  .hero-text .text-hero {
-    animation-delay: 0.6s;
-  }
-  
+}
+
+.hero-text .about-me-link {
+    animation-delay: 0.55s;
+}
+
+@media (max-width: 900px) {
+    .hero {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .home-page main {
+        margin: 2rem;
+        width: calc(100% - 4rem);
+    }
+    
+    .home-page h1 {
+        font-size: 2.5rem;
+    }
+}

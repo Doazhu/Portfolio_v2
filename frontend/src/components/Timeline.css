@@ -1,113 +1,124 @@
+.timeline-section {
+    padding: 4rem 6rem;
+    background: var(--void-black);
+}
+
+.timeline-section h2 {
+    font-family: var(--font-heading);
+    color: var(--toxic-yellow);
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
 .timeline {
     position: relative;
-    width: 100%;
-    height: 50vh;
-    background: #121212;
-    overflow: hidden; 
-    padding: 1rem;    
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
 
-  }
-  
-
-  .timeline-item {
+.timeline::before {
+    content: '';
     position: absolute;
-    background-color: #1B1B2F;
-    color: #FFFFFF;
-    width: 280px;
-    padding: 0.5rem 8rem;
-    border-radius: 4rem;     
-    box-shadow: 0 4px 10px rgba(0, 255, 255, 0.3);
-  }
-
-  .timeline-content {
-    margin-bottom: 0.5rem;
-  }
-
-  .timeline-container {
-    color: #D3D3D3;
-    min-height: 60vh;
-    opacity: 1;
-    background: #121212;
-  }
-
-  .timeline-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #007BFF; 
-    margin: 0;
-    margin-bottom: 0.3rem;
-  }
-  .timeline-description {
-    font-size: 0.9rem;
-    color: #D3D3D3;
-    margin: 0;
-  }
-
-  .timeline-year {
-    font-size: 0.8rem;
-    font-weight: bold;
-    background-color: #ADFF2F; 
-    color: #121212;
-    padding: 0.3rem 0.6rem;
-    border-radius: 12px;
-    display: inline-block;
-
-  }
-  
-  .timeline-item-1 {
-    bottom: 277px;
-    left: 280px;
-  }
-  .timeline-item-2 {
-    bottom: 160px;
-    left: 620px;
-  }
-  .timeline-item-3 {
-    bottom: 44px;
-    left: 880px;
-  }
-  .timeline-item-4 {
-    left: 1140px;
-  }
-
-@keyframes slideInLeft {
-  from {
-      transform: translateX(-100%);
-      opacity: 0;
-  }
-  to {
-      transform: translateX(0);
-      opacity: 1;
-  }
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--toxic-yellow), transparent);
 }
 
 .timeline-item {
-  animation: slideInLeft 0.6s ease-out;
-  animation-fill-mode: both;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: calc(50% + 30px);
+    position: relative;
+    margin-bottom: 3rem;
 }
 
-.timeline-item:nth-child(1) {
-  animation-delay: 0.2s;
-}
-.timeline-item:nth-child(2) {
-  animation-delay: 0.4s;
-}
-.timeline-item:nth-child(3) {
-  animation-delay: 0.6s;
-}
-.timeline-item:nth-child(4) {
-  animation-delay: 0.8s;
+.timeline-item:nth-child(even) {
+    justify-content: flex-start;
+    padding-right: 0;
+    padding-left: calc(50% + 30px);
 }
 
-.about-section {
-  background: transparent;
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    background: var(--toxic-yellow);
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(204, 255, 0, 0.5);
+    top: 20px;
 }
 
-main {
-  background: transparent;
+.timeline-content {
+    background: var(--dark-graphite);
+    padding: 1.5rem 2rem;
+    border-radius: 16px;
+    border: 1px solid rgba(204, 255, 0, 0.15);
+    max-width: 450px;
+    transition: all 0.3s ease;
 }
 
-#root {
-  background: transparent;
+.timeline-content:hover {
+    border-color: var(--toxic-yellow);
+    box-shadow: 0 0 30px rgba(204, 255, 0, 0.15);
+    transform: translateY(-4px);
 }
 
+.timeline-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--toxic-yellow);
+    margin: 0 0 0.75rem 0;
+}
+
+.timeline-description {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    color: var(--light-gray);
+    margin: 0 0 1rem 0;
+    line-height: 1.6;
+}
+
+.timeline-year {
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    background: var(--toxic-yellow);
+    color: var(--void-black);
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+}
+
+@media (max-width: 900px) {
+    .timeline-section {
+        padding: 3rem 2rem;
+    }
+    
+    .timeline::before {
+        left: 20px;
+    }
+    
+    .timeline-item,
+    .timeline-item:nth-child(even) {
+        justify-content: flex-start;
+        padding-left: 60px;
+        padding-right: 0;
+    }
+    
+    .timeline-item::before {
+        left: 20px;
+        transform: translateX(-50%);
+    }
+    
+    .timeline-content {
+        max-width: 100%;
+    }
+}

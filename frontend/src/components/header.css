@@ -1,107 +1,109 @@
 .header {
-    background-color: #000000;
-    
+    background-color: #0a0a0a;
     padding: 20px 20px;
-    border-radius: 1rem ;
+    border-radius: 1rem;
     margin-inline: 2rem;
     margin-top: 1rem;
     margin-bottom: 1rem;
-
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     color: #FFFFFF;
+    overflow: hidden;
+    position: relative;
 }
 
 .nav-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    overflow: hidden;
 }
-
 
 .console-log {
     display: flex;
     align-items: center;
     justify-content: start;
-
     overflow: hidden;
-
-    color: #00FF00; 
-    font-family: 'Roboto Mono', monospace; 
+    color: var(--toxic-yellow);
+    font-family: 'Roboto Mono', monospace;
 }
 
 .home {
     text-decoration: none;
-    color: #00FF00;
+    color: var(--toxic-yellow);
 }
 
 .text {
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
-    border-right: 2px solid #00FF00;
-    animation: typing 3s steps(12), blink 0.5s step-end 3;
-    animation-fill-mode: forwards;
+    width: 0;
+    border-right: 2px solid var(--toxic-yellow);
+    animation: typing 2s steps(16) forwards, blink 0.6s step-end infinite;
+    animation-delay: 0.3s, 0.3s;
 }
 
-    @keyframes typing {
-        from {
-            width: 0;
-        }
-        to {
-            width: 16ch; 
-        }
-    }
+@keyframes typing {
+    from { width: 0; }
+    to { width: 16ch; }
+}
 
-  
-
-    @keyframes blink {
-        0% {
-            border-color: #00FF00;
-        }
-        50% {
-            border-color: transparent;
-        }
-        100% {
-            border-color: #00FF00;
-        }
-    }
-    
+@keyframes blink {
+    0%, 100% { border-color: var(--toxic-yellow); }
+    50% { border-color: transparent; }
+}
 
 .nav-list {
     list-style: none;
     display: flex;
     align-items: center;
     justify-content: end;
-
-    font-weight: 400;
+    font-weight: 500;
     font-size: 18px;
-    gap: 15px;
-    
-    margin: 0 ;
+    gap: 20px;
+    margin: 0;
     padding: 0;
-    
-    opacity: 0; 
-    animation: fadeInFromBottom 1.5s ease-out forwards; 
+    opacity: 0;
+    transform: translateY(0);
+    animation: fadeIn 0.8s ease-out forwards;
     animation-delay: 0.5s;
 }
 
-@keyframes fadeInFromBottom {
+@keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(20px); 
     }
     to {
         opacity: 1;
-        transform: translateY(0); 
     }
 }
 
 .link {
-    color: white;
+    color: #E0E0E0;
     text-decoration: none;
+    position: relative;
+    padding: 4px 0;
+    transition: color 0.3s ease;
+}
+
+.link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--toxic-yellow);
+    transition: width 0.3s ease;
+}
+
+.link:hover {
+    color: var(--toxic-yellow);
+}
+
+.link:hover::after {
+    width: 100%;
 }
 
 .title {
     margin: 0;
 }
-

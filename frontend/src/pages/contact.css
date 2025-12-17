@@ -1,82 +1,110 @@
 body {
-    background-color: #1B1B2F;
-    color: #FFFFFF;
+    background-color: var(--void-black);
+    color: var(--white);
     min-height: 100vh;
-    position: relative;
 }
 
 .contact-section {
-    max-width: 800px;
-    margin: 2rem auto;
+    max-width: 700px;
+    margin: 4rem auto;
     padding: 3rem;
-    background: linear-gradient(145deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+    background: var(--dark-graphite);
     border-radius: 20px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(0, 255, 255, 0.2);
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.1),
-                0 0 15px rgba(255, 0, 255, 0.1) inset;
-    animation: borderGlow 3s infinite alternate;
+    border: 1px solid rgba(204, 255, 0, 0.15);
+    box-shadow: 0 0 40px rgba(204, 255, 0, 0.05);
 }
 
-h1 {
-    color: #007BFF;
-    font-size: 2.5rem;
-    text-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+.contact-section h1 {
+    font-family: var(--font-heading);
+    color: var(--toxic-yellow);
+    font-size: 3rem;
     margin-bottom: 2rem;
+    text-shadow: 0 0 30px rgba(204, 255, 0, 0.3);
 }
 
-p {
+.contact-section p {
     font-size: 1.1rem;
-    line-height: 1.6;
+    line-height: 1.8;
     margin: 1.5rem 0;
-    color: #D3D3D3;
+    color: var(--light-gray);
 }
 
-a {
-    color: #00FFFF;
+.contact-section a {
+    color: var(--toxic-yellow);
     text-decoration: none;
-    transition: all 0.3s ease;
     position: relative;
+    transition: all 0.3s ease;
 }
 
-
-a:hover {
-    color: #FF00FF;
-    text-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
-    text-decoration: none !important;
+.contact-section a:hover {
+    color: var(--neon-lemon);
+    text-shadow: 0 0 12px rgba(204, 255, 0, 0.5);
 }
 
-
-
-a::after {
+.contact-section a::after {
     content: '';
     position: absolute;
     bottom: -2px;
     left: 0;
     width: 0;
     height: 2px;
-    background: #ADFF2F;
+    background: var(--toxic-yellow);
     transition: width 0.3s ease;
 }
 
-a:hover::after {
+.contact-section a:hover::after {
     width: 100%;
 }
 
-@keyframes borderGlow {
-    0% {
-        box-shadow: 0 0 30px rgba(0, 255, 255, 0.2),
-                    0 0 15px rgba(255, 0, 255, 0.1) inset;
-    }
-    100% {
-        box-shadow: 0 0 45px rgba(0, 255, 255, 0.4),
-                    0 0 25px rgba(255, 0, 255, 0.2) inset;
-    }
+.contact-form {
+    margin-top: 2rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: var(--void-black);
+    border: 1px solid rgba(204, 255, 0, 0.2);
+    border-radius: 8px;
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: var(--toxic-yellow);
+}
+
+.contact-form button {
+    width: 100%;
+    padding: 1rem;
+    background: var(--toxic-yellow);
+    color: var(--void-black);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.contact-form button:hover {
+    background: var(--neon-lemon);
+    box-shadow: 0 0 20px rgba(204, 255, 0, 0.4);
 }
 
 @media (max-width: 768px) {
     .contact-section {
-        margin: 1rem;
+        margin: 2rem 1rem;
         padding: 2rem;
+    }
+    
+    .contact-section h1 {
+        font-size: 2rem;
     }
 }

@@ -59,13 +59,11 @@ function About() {
           </div>
         </motion.section>
 
-        {/* Анимированный контейнер для Timeline */}
         <motion.div 
-          className="timeline-container" 
-          style={{ backgroundColor: ' #121212;', color: '#FFFFFF', minHeight: '60vh' }}
+          className="timeline-container"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
+          transition={{ duration: 0.8 }}
         >
           <Timeline />
         </motion.div>

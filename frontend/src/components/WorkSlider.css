@@ -1,15 +1,26 @@
+.slider-section {
+    padding: 4rem 6rem;
+    background: var(--void-black);
+}
+
+.slider-section h2 {
+    font-family: var(--font-heading);
+    color: var(--toxic-yellow);
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
 .slider-container {
     position: relative;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1100px;
     margin: 0 auto;
-    height: 500px;
+    height: 480px;
     overflow: hidden;
-    background: #1B1B2F;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: var(--dark-graphite);
+    border-radius: 20px;
+    border: 1px solid rgba(204, 255, 0, 0.1);
 }
 
 .slide {
@@ -18,95 +29,155 @@
     height: 100%;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .slide-content {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
     align-items: center;
-    justify-content: center;
     height: 100%;
-    padding: 2rem;
-    gap: 4rem;
+    padding: 3rem;
+    gap: 3rem;
+}
+
+.slide-image-wrapper {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
 }
 
 .slide-content img {
-    width: 60%;
-    height: 400px;
+    width: 100%;
+    height: 380px;
     object-fit: cover;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
 }
 
 .slide-info {
-    flex: 1;
-    text-align: left;
-    padding: 2rem;
-    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem;
 }
 
 .slide-info h2 {
-    font-size: 2.5rem;
-    margin-bottom: 1.5rem;
-    color: #007BFF;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--toxic-yellow);
+    text-align: left;
 }
 
 .slide-info p {
-    font-size: 1.2rem;
-    line-height: 1.6;
-    color: #D3D3D3;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--light-gray);
 }
 
-.slider-dots {
+.slider-nav {
     position: absolute;
     bottom: 2rem;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 1rem;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.slider-dots {
+    display: flex;
+    gap: 0.75rem;
 }
 
 .dot {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     border: none;
-    background: rgba(0, 255, 255, 0.3);
+    background: rgba(204, 255, 0, 0.25);
     cursor: pointer;
     transition: all 0.3s ease;
+    padding: 0;
+}
+
+.dot:hover {
+    background: rgba(204, 255, 0, 0.5);
+    transform: scale(1.2);
 }
 
 .dot.active {
-    background: #00FFFF;
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    background: var(--toxic-yellow);
+    box-shadow: 0 0 12px rgba(204, 255, 0, 0.6);
+    transform: scale(1.2);
 }
 
-@media (max-width: 768px) {
+.slider-arrow {
+    background: transparent;
+    border: 1px solid rgba(204, 255, 0, 0.3);
+    color: var(--toxic-yellow);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.slider-arrow:hover {
+    background: var(--toxic-yellow);
+    color: var(--void-black);
+    box-shadow: 0 0 15px rgba(204, 255, 0, 0.4);
+}
+
+.slider-arrow svg {
+    width: 20px;
+    height: 20px;
+}
+
+@media (max-width: 900px) {
+    .slider-section {
+        padding: 3rem 2rem;
+    }
+    
+    .slider-container {
+        height: auto;
+        min-height: 550px;
+    }
+    
     .slide-content {
-        flex-direction: column;
-        padding: 1rem;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        padding: 2rem;
+        gap: 1.5rem;
     }
-
+    
     .slide-content img {
-        width: 100%;
-        height: 200px;
+        height: 220px;
     }
-
+    
     .slide-info {
-        padding: 1rem;
+        text-align: center;
+        padding: 0;
+    }
+    
+    .slide-info h2 {
+        font-size: 1.4rem;
         text-align: center;
     }
-
-    .slide-info h2 {
-        font-size: 1.8rem;
-    }
-
+    
     .slide-info p {
         font-size: 1rem;
     }
-
-    .slider-container {
-        height: auto;
-        min-height: 500px;
+    
+    .slider-nav {
+        bottom: 1.5rem;
     }
 }

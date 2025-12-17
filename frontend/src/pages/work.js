@@ -1,74 +1,61 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import "./work.css";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import WorkSlider from '../components/WorkSlider';
+import omlette from "../images/omlette_project.jpg";
+import library from "../images/library_project.jpg";
+import portfolio from "../images/portfolio_project.jpg";
+import drive from "../images/drive_project.jpg";
 
 function Work() {
-  return (
-    <div>
-      <Header />
-      <main>
-        <h1 className="Work-text">Мои проекты</h1>
-        <WorkSlider />
-        <section className="krytaua-sectiya">
-
-            <h1 className="Work-text">Мои остальные работы</h1>
-
-          <div className="all-work">
-
-            <div className="rows rows-1">
-              <div>
-                <div></div>
-                <img src="http://localhost:3000/static/media/omlette_project.4329911993578898fb4a.jpg" />
-                <h3>Omlette</h3>
-                <p>моя первая работа, начало моей карьеры</p>
-              </div>
-              <div>
-                <img src="http://localhost:3000/static/media/omlette_project.4329911993578898fb4a.jpg" />
-                <h3>Проект 3</h3>
-                <p>Описание проекта 3</p>
-              </div>
-            </div>
-
-            <div className="rows rows-2">
-              <div>
-                <img src="http://localhost:3000/static/media/omlette_project.4329911993578898fb4a.jpg" />
-                <h3>Проект 4</h3>
-                <p>Описание проекта 4</p>
-              </div>
-              <div>
-                <img src="http://localhost:3000/static/media/omlette_project.4329911993578898fb4a.jpg" />
-                <h3>Проект 5</h3>
-                <p>Описание проекта 5</p>
-              </div>
-            </div>
-
-            <div className="rows rows-3">
-              <div>
-                <img src="http://localhost:3000/static/media/omlette_project.4329911993578898fb4a.jpg" />
-                <h3>Проект 6</h3>
-                <p>Описание проекта 6</p>
-              </div>
-              <div>
-                <img src="http://localhost:3000/static/media/omlette_project.4329911993578898fb4a.jpg" />
-                <h3>Проект 7</h3>
-                <p>Описание проекта 7</p>
-              </div>
-              <div>
-                <img src="http://localhost:3000/static/media/omlette_project.4329911993578898fb4a.jpg" />
-                <h3>Проект 8</h3>
-                <p>Описание проекта 8</p>
-              </div>
-            </div>
-
-          </div>
-        </section>
-      </main>
-      <Footer />
-    </div>
-  );
+    return (
+        <div>
+            <Header />
+            <main>
+                <WorkSlider />
+                
+                <section className="other-works">
+                    <h2>Другие работы</h2>
+                    
+                    <div className="works-grid">
+                        <div className="work-card">
+                            <img src={omlette} alt="Omlette" />
+                            <div className="work-card-content">
+                                <h3>Рецепт омлета</h3>
+                                <p>Моя первая работа — простая landing page с рецептом</p>
+                            </div>
+                        </div>
+                        
+                        <div className="work-card">
+                            <img src={library} alt="Library" />
+                            <div className="work-card-content">
+                                <h3>Библиотека</h3>
+                                <p>Веб-приложение на Django с функционалом библиотеки</p>
+                            </div>
+                        </div>
+                        
+                        <div className="work-card">
+                            <img src={portfolio} alt="Portfolio" />
+                            <div className="work-card-content">
+                                <h3>Старое портфолио</h3>
+                                <p>Первая версия персонального сайта</p>
+                            </div>
+                        </div>
+                        
+                        <div className="work-card">
+                            <img src={drive} alt="Fylo" />
+                            <div className="work-card-content">
+                                <h3>Облако Fylo</h3>
+                                <p>Landing page с адаптивной вёрсткой</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+            <Footer />
+        </div>
+    );
 }
 
 export default Work;
