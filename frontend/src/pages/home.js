@@ -58,12 +58,12 @@ function Home() {
             <section className="hero-section">
                 <div className="hero-content">
                     <h1 className="hero-title fade-in-up">
-                        <span className="greeting">Привет</span>
+                        <span className="greeting accent-font">Привет</span>
                         <span className="wave">👋</span>
                     </h1>
                     
                     <p className="hero-subtitle fade-in-up">
-                        Я <span className="highlight">Александр</span>, fullstack разработчик
+                        <span className="accent-font">Я</span> <span className="highlight accent-font">Александр</span>, fullstack разработчик
                     </p>
                     
                     <p className="hero-tagline fade-in-up">
@@ -87,9 +87,9 @@ function Home() {
             <section className="showcase-section">
                 <div className="showcase-content">
                     <div className="showcase-text">
-                        <span className="showcase-label">Что я делаю</span>
+                        <span className="showcase-label accent-font">Что я делаю</span>
                         <h2 className="showcase-title">
-                            Превращаю идеи<br/>в <span className="highlight">код</span>
+                            Превращаю идеи<br/>в <span className="highlight accent-font">код</span>
                         </h2>
                         <p className="showcase-description">
                             От концепта до продакшена. Фронтенд, бэкенд, 

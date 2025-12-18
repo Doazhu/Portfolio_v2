@@ -48,7 +48,7 @@ function Work() {
                 <WorkSlider />
                 
                 <section className="other-works">
-                    <h2>Другие работы</h2>
+                    <h2 className="accent-font">Другие работы</h2>
                     
                     <div className="works-grid">
                         {projects.filter(p => !p.is_featured).map(project => (

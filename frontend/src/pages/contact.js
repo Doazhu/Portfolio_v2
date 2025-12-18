@@ -52,10 +52,10 @@ function Contact() {
             <Header />
             <main className="contact-main">
                 <div className="contact-hero">
-                    <span className="contact-label">Связаться</span>
+                    <span className="contact-label accent-font">Связаться</span>
                     <h1 className="contact-title">
                         Давай создадим<br/>
-                        что-то <span className="highlight">крутое</span>
+                        что-то <span className="highlight accent-font">крутое</span>
                     </h1>
                     <p className="contact-subtitle">
                         Открыт для новых проектов, коллабораций и интересных идей

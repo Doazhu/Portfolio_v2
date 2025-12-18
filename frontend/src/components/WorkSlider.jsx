@@ -77,7 +77,7 @@ const WorkSlider = () => {
 
     return (
         <section className="slider-section">
-            <h2>Мои работы</h2>
+            <h2 className="accent-font">Мои работы</h2>
             <div className="slider-container">
                 <AnimatePresence mode="wait" custom={direction}>
                     <motion.div

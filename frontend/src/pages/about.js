@@ -77,7 +77,7 @@ function About() {
                     </div>
                     
                     <div className="about-text">
-                        <motion.h1 variants={itemVariants} custom={0}>Я Александр</motion.h1>
+                        <motion.h1 variants={itemVariants} custom={0}><span className="accent-font">Я Александр</span></motion.h1>
                         <motion.p variants={itemVariants} custom={1}>
                             На протяжении последних пяти лет я активно развиваюсь в области программирования и цифрового дизайна.
                             Моя страсть — открывать новые горизонты, будь то путешествия в новые страны или изучение передовых технологий.
@@ -109,7 +109,7 @@ function About() {
                         transition={{ duration: 0.5 }}
                     >
                         <span className="approach-label">Как я работаю</span>
-                        <h2 className="approach-title">Мой подход</h2>
+                        <h2 className="approach-title accent-font">Мой подход</h2>
                     </motion.div>
 
                     <div className="approach-grid">

@@ -7,7 +7,7 @@
     --light-gray: #E0E0E0;
     --medium-gray: #888888;
     
-    --font-heading: 'Permanent Marker', 'Montserrat', sans-serif;
+    --font-heading: 'Rubik Wet Paint', 'Montserrat', sans-serif;
     --font-body: 'Montserrat', sans-serif;
 }
 
@@ -98,4 +98,8 @@ button:hover {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--toxic-yellow);
+}
+
+.accent-font {
+    font-family: 'Rubik Wet Paint', cursive;
 }
