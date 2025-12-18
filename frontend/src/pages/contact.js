@@ -17,8 +17,8 @@ function Contact() {
             id: 'email',
             icon: '✉️',
             label: 'Email',
-            value: 'alexandrrenev07@gmail.com',
-            link: 'mailto:alexandrrenev07@gmail.com',
+            value: 'me@doazhu.pro',
+            link: 'mailto:me@doazhu.pro',
             color: '#EA4335'
         },
         {
@@ -92,7 +92,7 @@ function Contact() {
                         <p>Напиши мне — обсудим детали и начнём работу</p>
                         <button 
                             className="cta-button"
-                            onClick={() => copyToClipboard('alexandrrenev07@gmail.com', 'email')}
+                            onClick={() => copyToClipboard('me@doazhu.pro', 'email')}
                         >
                             {copied === 'email' ? '✓ Скопировано!' : 'Скопировать email'}
                         </button>
