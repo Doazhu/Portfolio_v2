@@ -17,9 +17,16 @@ from routing.skills import router as skills_router
 from routing.messages import router as messages_router
 from routing.settings import router as settings_router
 from routing.uploads import router as uploads_router
+from routing.admin_api import router as admin_api_router
 
 UPLOAD_DIR = Path("uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)
+
+STATIC_PROJECTS_DIR = Path("static-projects")
+STATIC_PROJECTS_DIR.mkdir(exist_ok=True)
+
+STATIC_ADMIN_DIR = Path("static/admin")
+STATIC_ADMIN_DIR.mkdir(parents=True, exist_ok=True)
 
 logging.basicConfig(
     level=logging.DEBUG if settings.DEBUG else logging.INFO,
@@ -56,15 +63,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-setup_admin(app, engine)
-
-app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
-
+# Register API routers BEFORE static mounts (order matters in FastAPI)
+app.include_router(admin_api_router)  # Must be before static mounts
 app.include_router(projects_router)
 app.include_router(skills_router)
 app.include_router(messages_router)
 app.include_router(settings_router)
 app.include_router(uploads_router)
+
+setup_admin(app, engine)
+
+# Static file mounts should be AFTER API routers
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+app.mount("/static-projects", StaticFiles(directory=STATIC_PROJECTS_DIR), name="static-projects")
+app.mount("/static/admin", StaticFiles(directory=STATIC_ADMIN_DIR), name="static-admin")
 
 @app.get("/health")
 async def health_check():

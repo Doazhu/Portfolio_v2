@@ -1,0 +1,485 @@
+{% extends "sqladmin/base.html" %}
+{% from 'sqladmin/_macros.html' import display_menu %}
+
+{# 
+  Custom Admin Layout with Glassmorphism Theme
+  Requirements: 1.3 - Apply Glassmorphism styling with dark theme and accent colors
+  Requirements: 5.1 - Display skeleton loaders in place of content while loading
+  Requirements: 5.2 - Apply smooth animated transitions using Framer Motion style
+#}
+
+{% block head %}
+{{ super() }}
+<!-- Custom Glassmorphism Admin CSS -->
+<link rel="stylesheet" href="/static/admin/custom.css">
+
+<style>
+/* Page transition animations */
+/* Requirements: 5.2 */
+.page-wrapper {
+    animation: pageSlideIn 0.3s ease-out;
+}
+
+@keyframes pageSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Skeleton loader styles for loading states */
+/* Requirements: 5.1 */
+.skeleton-container {
+    display: none;
+}
+
+.loading .skeleton-container {
+    display: block;
+}
+
+.loading .content-loaded {
+    display: none;
+}
+
+.skeleton-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    padding: 16px;
+    background: rgba(31, 41, 55, 0.5);
+    border-radius: 8px;
+}
+
+.skeleton-cell {
+    background: linear-gradient(
+        90deg,
+        rgba(55, 65, 81, 0.3) 25%,
+        rgba(75, 85, 99, 0.4) 50%,
+        rgba(55, 65, 81, 0.3) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s infinite;
+    border-radius: 4px;
+    height: 20px;
+}
+
+.skeleton-cell.id { width: 40px; }
+.skeleton-cell.title { width: 200px; }
+.skeleton-cell.status { width: 80px; }
+.skeleton-cell.date { width: 120px; }
+.skeleton-cell.actions { width: 100px; }
+
+@keyframes skeleton-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Card skeleton */
+.skeleton-card {
+    background: rgba(31, 41, 55, 0.6);
+    border: 1px solid rgba(55, 65, 81, 0.5);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.skeleton-card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.skeleton-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(
+        90deg,
+        rgba(55, 65, 81, 0.3) 25%,
+        rgba(75, 85, 99, 0.4) 50%,
+        rgba(55, 65, 81, 0.3) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s infinite;
+}
+
+.skeleton-card-value {
+    height: 40px;
+    width: 80px;
+    margin-bottom: 8px;
+    background: linear-gradient(
+        90deg,
+        rgba(55, 65, 81, 0.3) 25%,
+        rgba(75, 85, 99, 0.4) 50%,
+        rgba(55, 65, 81, 0.3) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s infinite;
+    border-radius: 6px;
+}
+
+.skeleton-card-label {
+    height: 16px;
+    width: 120px;
+    background: linear-gradient(
+        90deg,
+        rgba(55, 65, 81, 0.3) 25%,
+        rgba(75, 85, 99, 0.4) 50%,
+        rgba(55, 65, 81, 0.3) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+/* Smooth transitions for interactive elements */
+/* Requirements: 5.2 */
+.nav-link,
+.btn,
+.card,
+.table tbody tr,
+.dropdown-item {
+    transition: all 0.2s ease !important;
+}
+
+/* Hover lift effect */
+.card:hover,
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Focus ring animation */
+.form-control:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    animation: focusRing 0.2s ease;
+}
+
+@keyframes focusRing {
+    0% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+}
+
+/* Toast notification animation */
+/* Requirements: 5.3 */
+.toast-notification {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: rgba(31, 41, 55, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(55, 65, 81, 0.5);
+    border-radius: 12px;
+    padding: 16px 24px;
+    color: #e5e7eb;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 10000;
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.toast-notification.show {
+    transform: translateX(0);
+}
+
+.toast-notification.success {
+    border-left: 4px solid #22c55e;
+}
+
+.toast-notification.success i {
+    color: #22c55e;
+}
+
+.toast-notification.error {
+    border-left: 4px solid #ef4444;
+}
+
+.toast-notification.error i {
+    color: #ef4444;
+}
+
+.toast-notification.info {
+    border-left: 4px solid #6366f1;
+}
+
+.toast-notification.info i {
+    color: #6366f1;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(99, 102, 241, 0.3);
+    border-radius: 50%;
+    border-top-color: #6366f1;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Fade in animation for content */
+.fade-in {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Staggered animation for list items */
+.stagger-item {
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 0.05s; }
+.stagger-item:nth-child(2) { animation-delay: 0.1s; }
+.stagger-item:nth-child(3) { animation-delay: 0.15s; }
+.stagger-item:nth-child(4) { animation-delay: 0.2s; }
+.stagger-item:nth-child(5) { animation-delay: 0.25s; }
+.stagger-item:nth-child(6) { animation-delay: 0.3s; }
+.stagger-item:nth-child(7) { animation-delay: 0.35s; }
+.stagger-item:nth-child(8) { animation-delay: 0.4s; }
+.stagger-item:nth-child(9) { animation-delay: 0.45s; }
+.stagger-item:nth-child(10) { animation-delay: 0.5s; }
+
+/* Pulse animation for notifications */
+.pulse {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* Scale animation for buttons */
+.btn:active {
+    transform: scale(0.98) !important;
+}
+
+/* Ripple effect for buttons */
+.btn-ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-ripple::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+}
+
+.btn-ripple:active::after {
+    width: 200px;
+    height: 200px;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="wrapper">
+  <aside class="navbar navbar-expand-lg navbar-vertical navbar-expand-md navbar-dark">
+    <div class="container-fluid">
+      <h1 class="navbar-brand navbar-brand-autodark">
+        <a href="{{ url_for('admin:index') }}">
+          {% if admin.logo_url %}
+          <img src="{{ admin.logo_url }}" width="64" height="64" alt="Admin" class="navbar-brand-image" />
+          {% else %}
+          <h3 class="text-gradient">{{ admin.title }}</h3>
+          {% endif %}
+        </a>
+      </h1>
+      <nav class="navbar navbar-expand-sm" id="navbar-menu">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          {{ display_menu(admin._menu, request) }}
+        </div>
+      </nav>
+      {% if admin.authentication_backend %}
+      <a href="{{ request.url_for('admin:logout') }}" class="btn btn-secondary btn-icon btn-ripple">
+        <i class="fa fa-sign-out"></i>
+        <span>Logout</span>
+      </a>
+      {% endif %}
+    </div>
+  </aside>
+  <div class="page-wrapper">
+    <div class="container-fluid">
+      <div class="page-header d-print-none">
+        {% block content_header %}
+        <div class="row align-items-center fade-in">
+          <div class="col">
+            <h2 class="page-title">{{ title }}</h2>
+            <div class="page-pretitle">{{ subtitle }}</div>
+          </div>
+        </div>
+        {% endblock %}
+      </div>
+    </div>
+    <div class="page-body flex-grow-1">
+      <div class="container-fluid">
+        <div class="row row-deck row-cards">
+          {% block content %} {% endblock %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification container -->
+<div id="toastContainer"></div>
+{% endblock %}
+
+{% block tail %}
+{{ super() }}
+<script>
+/**
+ * Toast notification system
+ * Requirements: 5.3 - Provide visual feedback (success/error notifications)
+ */
+function showToast(message, type = 'info', duration = 3000) {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+    
+    const toast = document.createElement('div');
+    toast.className = `toast-notification ${type}`;
+    
+    let icon = 'fa-info-circle';
+    if (type === 'success') icon = 'fa-check-circle';
+    if (type === 'error') icon = 'fa-exclamation-circle';
+    
+    toast.innerHTML = `
+        <i class="fa-solid ${icon}"></i>
+        <span>${message}</span>
+    `;
+    
+    container.appendChild(toast);
+    
+    // Trigger animation
+    requestAnimationFrame(() => {
+        toast.classList.add('show');
+    });
+    
+    // Auto-remove
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, duration);
+}
+
+/**
+ * Add stagger animation to table rows
+ * Requirements: 5.2 - Apply smooth animated transitions
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    // Add stagger animation to table rows
+    const tableRows = document.querySelectorAll('table tbody tr');
+    tableRows.forEach((row, index) => {
+        row.classList.add('stagger-item');
+        row.style.animationDelay = `${index * 0.05}s`;
+    });
+    
+    // Add ripple effect to buttons
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(btn => {
+        btn.classList.add('btn-ripple');
+    });
+    
+    // Add fade-in to cards
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+        card.classList.add('fade-in');
+        card.style.animationDelay = `${index * 0.1}s`;
+    });
+});
+
+/**
+ * Skeleton loader helper
+ * Requirements: 5.1 - Display skeleton loaders in place of content
+ */
+function showSkeletonLoader(container, rows = 5) {
+    const skeleton = document.createElement('div');
+    skeleton.className = 'skeleton-container';
+    skeleton.id = 'skeletonLoader';
+    
+    let html = '';
+    for (let i = 0; i < rows; i++) {
+        html += `
+            <div class="skeleton-row">
+                <div class="skeleton-cell id"></div>
+                <div class="skeleton-cell title"></div>
+                <div class="skeleton-cell status"></div>
+                <div class="skeleton-cell date"></div>
+                <div class="skeleton-cell actions"></div>
+            </div>
+        `;
+    }
+    
+    skeleton.innerHTML = html;
+    container.classList.add('loading');
+    container.prepend(skeleton);
+}
+
+function hideSkeletonLoader(container) {
+    const skeleton = container.querySelector('#skeletonLoader');
+    if (skeleton) {
+        skeleton.remove();
+    }
+    container.classList.remove('loading');
+}
+
+/**
+ * Loading state for async operations
+ */
+function setLoading(element, loading = true) {
+    if (loading) {
+        element.dataset.originalContent = element.innerHTML;
+        element.innerHTML = '<span class="loading-spinner"></span>';
+        element.disabled = true;
+    } else {
+        element.innerHTML = element.dataset.originalContent || element.innerHTML;
+        element.disabled = false;
+    }
+}
+
+// Expose functions globally
+window.showToast = showToast;
+window.showSkeletonLoader = showSkeletonLoader;
+window.hideSkeletonLoader = hideSkeletonLoader;
+window.setLoading = setLoading;
+</script>
+{% endblock %}

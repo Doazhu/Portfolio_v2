@@ -1,54 +1,24 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useCallback } from 'react';
 import { projectsAPI, uploadsAPI } from '../api';
-import project1 from "../images/library_project.jpg";
-import project2 from "../images/portfolio_project.jpg";
-import project3 from "../images/omlette_project.jpg";
-import project4 from "../images/drive_project.jpg";
 import './WorkSlider.css';
 
-const fallbackWorks = [
-    {
-        id: 1,
-        image_url: project2,
-        title: "Моё старое портфолио",
-        description: "Множество версий моего первого портфолио — от макета в Figma до рабочего сайта."
-    },
-    {
-        id: 2,
-        image_url: project1,
-        title: "Библиотека",
-        description: "Первый проект на Django с полноценным CRUD функционалом."
-    },
-    {
-        id: 3,
-        image_url: project3,
-        title: "Рецепт отменного омлета",
-        description: "Моя самая первая вёрстка — простая страница."
-    },
-    {
-        id: 4,
-        image_url: project4,
-        title: "Облако Fylo",
-        description: "Landing page с современным дизайном и адаптивной вёрсткой."
-    },
-];
-
 const WorkSlider = () => {
-    const [works, setWorks] = useState(fallbackWorks);
+    const [works, setWorks] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [direction, setDirection] = useState(1);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const loadProjects = async () => {
             try {
                 const data = await projectsAPI.getAll(true);
-                if (data.length > 0) {
-                    setWorks(data);
-                    setCurrentIndex(0);
-                }
+                setWorks(data);
+                setCurrentIndex(0);
             } catch (err) {
-                console.log("Используем fallback данные");
+                console.error("Ошибка загрузки проектов:", err);
+            } finally {
+                setLoading(false);
             }
         };
         loadProjects();
@@ -74,6 +44,24 @@ const WorkSlider = () => {
         center: { x: 0, opacity: 1 },
         exit: (dir) => ({ x: dir > 0 ? -300 : 300, opacity: 0 })
     };
+
+    if (loading) {
+        return (
+            <section className="slider-section">
+                <h2 className="accent-font">Мои работы</h2>
+                <div className="slider-loading">Загрузка...</div>
+            </section>
+        );
+    }
+
+    if (works.length === 0) {
+        return (
+            <section className="slider-section">
+                <h2 className="accent-font">Мои работы</h2>
+                <div className="slider-empty">Проекты пока не добавлены</div>
+            </section>
+        );
+    }
 
     return (
         <section className="slider-section">

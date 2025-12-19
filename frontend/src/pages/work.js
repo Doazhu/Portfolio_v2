@@ -1,33 +1,23 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./work.css";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import WorkSlider from '../components/WorkSlider';
 import { projectsAPI, uploadsAPI } from "../api";
-import omlette from "../images/omlette_project.jpg";
-import library from "../images/library_project.jpg";
-import portfolio from "../images/portfolio_project.jpg";
-import drive from "../images/drive_project.jpg";
-
-const fallbackWorks = [
-    { id: 1, image_url: omlette, title: "Рецепт омлета", description: "Моя первая работа — простая landing page с рецептом" },
-    { id: 2, image_url: library, title: "Библиотека", description: "Веб-приложение на Django с функционалом библиотеки" },
-    { id: 3, image_url: portfolio, title: "Старое портфолио", description: "Первая версия персонального сайта" },
-    { id: 4, image_url: drive, title: "Облако Fylo", description: "Landing page с адаптивной вёрсткой" },
-];
 
 function Work() {
-    const [projects, setProjects] = useState(fallbackWorks);
+    const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const loadProjects = async () => {
             try {
                 const data = await projectsAPI.getAll();
-                if (data.length > 0) {
-                    setProjects(data);
-                }
+                setProjects(data);
             } catch (err) {
-                console.log("Используем fallback данные");
+                console.error("Ошибка загрузки проектов:", err);
+            } finally {
+                setLoading(false);
             }
         };
         loadProjects();
@@ -50,6 +40,11 @@ function Work() {
                 <section className="other-works">
                     <h2 className="accent-font">Другие работы</h2>
                     
+                    {loading ? (
+                        <div className="loading">Загрузка проектов...</div>
+                    ) : projects.length === 0 ? (
+                        <div className="no-projects">Проекты пока не добавлены</div>
+                    ) : (
                     <div className="works-grid">
                         {projects.filter(p => !p.is_featured).map(project => (
                             <div className="work-card" key={project.id}>
@@ -78,6 +73,7 @@ function Work() {
                             </div>
                         ))}
                     </div>
+                    )}
                 </section>
             </main>
             <Footer />

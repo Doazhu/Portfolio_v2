@@ -1,0 +1,572 @@
+{% extends "list.html" %}
+
+{% block tail_js %}
+{{ super() }}
+
+<!-- SortableJS CDN for drag-and-drop functionality -->
+<!-- Requirements: 3.3 -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+<style>
+/* Drag-and-drop reorder styles */
+/* Requirements: 3.3 */
+
+.reorder-mode-btn {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    color: white;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    margin-left: 10px;
+}
+.reorder-mode-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+.reorder-mode-btn.active {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+.reorder-mode-btn.active:hover {
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+}
+
+/* Save reorder button */
+.save-reorder-btn {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    color: white;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    margin-left: 10px;
+}
+.save-reorder-btn.visible {
+    display: inline-flex;
+}
+.save-reorder-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+}
+.save-reorder-btn:disabled {
+    background: #374151;
+    cursor: not-allowed;
+}
+
+/* Cancel reorder button */
+.cancel-reorder-btn {
+    background: #dc2626;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    color: white;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    margin-left: 10px;
+}
+.cancel-reorder-btn.visible {
+    display: inline-flex;
+}
+.cancel-reorder-btn:hover {
+    background: #b91c1c;
+}
+
+/* Reorder mode indicator */
+.reorder-mode-indicator {
+    display: none;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid #6366f1;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    color: #a5b4fc;
+    font-size: 0.9rem;
+    align-items: center;
+    gap: 10px;
+}
+.reorder-mode-indicator.visible {
+    display: flex;
+}
+.reorder-mode-indicator i {
+    color: #6366f1;
+    font-size: 1.2rem;
+}
+
+/* Sortable row styles */
+.sortable-row {
+    transition: all 0.2s ease;
+}
+.sortable-row.sortable-ghost {
+    opacity: 0.4;
+    background: rgba(99, 102, 241, 0.2) !important;
+}
+.sortable-row.sortable-chosen {
+    background: rgba(99, 102, 241, 0.1) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+.sortable-row.sortable-drag {
+    background: #1f2937 !important;
+    border: 2px solid #6366f1 !important;
+    border-radius: 8px;
+}
+
+/* Drag handle */
+.drag-handle {
+    cursor: grab;
+    padding: 8px;
+    color: #6b7280;
+    transition: color 0.2s ease;
+    display: none;
+}
+.drag-handle:hover {
+    color: #6366f1;
+}
+.drag-handle:active {
+    cursor: grabbing;
+}
+.reorder-mode .drag-handle {
+    display: inline-block;
+}
+
+/* Order number badge */
+.order-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    background: #374151;
+    border-radius: 6px;
+    color: #9ca3af;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0 8px;
+}
+.reorder-mode .order-badge {
+    background: #6366f1;
+    color: white;
+}
+
+/* Toast notification */
+.reorder-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 12px;
+    padding: 16px 24px;
+    color: #e5e7eb;
+    font-size: 0.95rem;
+    display: none;
+    align-items: center;
+    gap: 12px;
+    z-index: 10000;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease;
+}
+.reorder-toast.visible {
+    display: flex;
+}
+.reorder-toast.success {
+    border-color: #22c55e;
+}
+.reorder-toast.success i {
+    color: #22c55e;
+}
+.reorder-toast.error {
+    border-color: #dc2626;
+}
+.reorder-toast.error i {
+    color: #dc2626;
+}
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Disable row selection in reorder mode */
+.reorder-mode tbody tr {
+    user-select: none;
+}
+
+/* Loading overlay */
+.reorder-loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    backdrop-filter: blur(2px);
+}
+.reorder-loading-overlay.visible {
+    display: flex;
+}
+.reorder-loading-spinner {
+    background: #1f2937;
+    border-radius: 12px;
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #e5e7eb;
+    font-size: 1rem;
+    border: 1px solid #374151;
+}
+.reorder-loading-spinner i {
+    font-size: 1.5rem;
+    color: #6366f1;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+</style>
+
+<!-- Reorder mode indicator -->
+<div class="reorder-mode-indicator" id="reorderModeIndicator">
+    <i class="fa-solid fa-arrows-up-down"></i>
+    <span>Режим сортировки активен. Перетащите строки для изменения порядка, затем нажмите "Сохранить порядок".</span>
+</div>
+
+<!-- Toast notification -->
+<div class="reorder-toast" id="reorderToast">
+    <i class="fa-solid fa-check-circle"></i>
+    <span id="reorderToastText">Порядок сохранен</span>
+</div>
+
+<!-- Loading overlay -->
+<div class="reorder-loading-overlay" id="reorderLoadingOverlay">
+    <div class="reorder-loading-spinner">
+        <i class="fa-solid fa-spinner"></i>
+        <span>Сохранение порядка...</span>
+    </div>
+</div>
+
+<script>
+/**
+ * Drag-and-drop reorder functionality for ProjectAdmin
+ * Uses SortableJS library for smooth drag-drop interactions
+ * Wires up to PUT /admin/api/reorder endpoint
+ * Requirements: 3.3
+ */
+
+let sortableInstance = null;
+let isReorderMode = false;
+let originalOrder = [];
+let hasChanges = false;
+
+document.addEventListener('DOMContentLoaded', function() {
+    initReorderUI();
+});
+
+function initReorderUI() {
+    // Find the actions area (near create button) and add reorder buttons
+    const createBtn = document.querySelector('a[href*="create"]');
+    if (!createBtn) return;
+    
+    const actionsContainer = createBtn.parentNode;
+    
+    // Create reorder mode toggle button
+    const reorderBtn = document.createElement('button');
+    reorderBtn.className = 'reorder-mode-btn';
+    reorderBtn.id = 'reorderModeBtn';
+    reorderBtn.innerHTML = '<i class="fa-solid fa-arrows-up-down"></i> Сортировка';
+    reorderBtn.onclick = toggleReorderMode;
+    actionsContainer.appendChild(reorderBtn);
+    
+    // Create save button
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'save-reorder-btn';
+    saveBtn.id = 'saveReorderBtn';
+    saveBtn.innerHTML = '<i class="fa-solid fa-check"></i> Сохранить порядок';
+    saveBtn.onclick = saveReorder;
+    actionsContainer.appendChild(saveBtn);
+    
+    // Create cancel button
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'cancel-reorder-btn';
+    cancelBtn.id = 'cancelReorderBtn';
+    cancelBtn.innerHTML = '<i class="fa-solid fa-times"></i> Отмена';
+    cancelBtn.onclick = cancelReorder;
+    actionsContainer.appendChild(cancelBtn);
+    
+    // Add drag handles to each row
+    addDragHandles();
+}
+
+function addDragHandles() {
+    const tbody = document.querySelector('table tbody');
+    if (!tbody) return;
+    
+    const rows = tbody.querySelectorAll('tr');
+    rows.forEach((row, index) => {
+        // Add sortable-row class
+        row.classList.add('sortable-row');
+        
+        // Get the first cell (usually checkbox or ID)
+        const firstCell = row.querySelector('td');
+        if (firstCell) {
+            // Create drag handle
+            const handle = document.createElement('span');
+            handle.className = 'drag-handle';
+            handle.innerHTML = '<i class="fa-solid fa-grip-vertical"></i>';
+            
+            // Insert at the beginning of the first cell
+            firstCell.insertBefore(handle, firstCell.firstChild);
+        }
+        
+        // Store project ID from the row (extract from edit link or data attribute)
+        const editLink = row.querySelector('a[href*="edit"]');
+        if (editLink) {
+            const match = editLink.href.match(/\/edit\/(\d+)/);
+            if (match) {
+                row.dataset.projectId = match[1];
+            }
+        }
+    });
+}
+
+function toggleReorderMode() {
+    isReorderMode = !isReorderMode;
+    
+    const reorderBtn = document.getElementById('reorderModeBtn');
+    const saveBtn = document.getElementById('saveReorderBtn');
+    const cancelBtn = document.getElementById('cancelReorderBtn');
+    const indicator = document.getElementById('reorderModeIndicator');
+    const tableContainer = document.querySelector('.table-responsive') || document.querySelector('table').parentNode;
+    
+    if (isReorderMode) {
+        // Enable reorder mode
+        reorderBtn.classList.add('active');
+        reorderBtn.innerHTML = '<i class="fa-solid fa-arrows-up-down"></i> Режим сортировки';
+        saveBtn.classList.add('visible');
+        cancelBtn.classList.add('visible');
+        indicator.classList.add('visible');
+        tableContainer.classList.add('reorder-mode');
+        
+        // Store original order
+        storeOriginalOrder();
+        
+        // Initialize SortableJS
+        initSortable();
+    } else {
+        // Disable reorder mode
+        reorderBtn.classList.remove('active');
+        reorderBtn.innerHTML = '<i class="fa-solid fa-arrows-up-down"></i> Сортировка';
+        saveBtn.classList.remove('visible');
+        cancelBtn.classList.remove('visible');
+        indicator.classList.remove('visible');
+        tableContainer.classList.remove('reorder-mode');
+        
+        // Destroy SortableJS instance
+        if (sortableInstance) {
+            sortableInstance.destroy();
+            sortableInstance = null;
+        }
+        
+        hasChanges = false;
+    }
+}
+
+function storeOriginalOrder() {
+    originalOrder = [];
+    const rows = document.querySelectorAll('table tbody tr.sortable-row');
+    rows.forEach(row => {
+        if (row.dataset.projectId) {
+            originalOrder.push(parseInt(row.dataset.projectId));
+        }
+    });
+}
+
+function initSortable() {
+    const tbody = document.querySelector('table tbody');
+    if (!tbody) return;
+    
+    sortableInstance = new Sortable(tbody, {
+        animation: 150,
+        handle: '.drag-handle',
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        dragClass: 'sortable-drag',
+        onEnd: function(evt) {
+            hasChanges = true;
+            updateOrderBadges();
+        }
+    });
+}
+
+function updateOrderBadges() {
+    const rows = document.querySelectorAll('table tbody tr.sortable-row');
+    rows.forEach((row, index) => {
+        // Find order column and update if exists
+        const cells = row.querySelectorAll('td');
+        cells.forEach(cell => {
+            // Look for cells that might contain order number
+            const text = cell.textContent.trim();
+            if (/^\d+$/.test(text) && parseInt(text) < 1000) {
+                // This might be the order column - we could update it
+                // but for now we'll just track changes
+            }
+        });
+    });
+}
+
+function getCurrentOrder() {
+    const order = [];
+    const rows = document.querySelectorAll('table tbody tr.sortable-row');
+    rows.forEach(row => {
+        if (row.dataset.projectId) {
+            order.push(parseInt(row.dataset.projectId));
+        }
+    });
+    return order;
+}
+
+async function saveReorder() {
+    if (!hasChanges) {
+        showToast('Нет изменений для сохранения', 'info');
+        return;
+    }
+    
+    const newOrder = getCurrentOrder();
+    if (newOrder.length === 0) {
+        showToast('Не удалось получить порядок проектов', 'error');
+        return;
+    }
+    
+    // Show loading overlay
+    document.getElementById('reorderLoadingOverlay').classList.add('visible');
+    document.getElementById('saveReorderBtn').disabled = true;
+    
+    try {
+        const response = await fetch('/admin/api/reorder', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ project_ids: newOrder })
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Failed to save order');
+        }
+        
+        const result = await response.json();
+        
+        showToast(`Порядок сохранен (${result.count} проектов)`, 'success');
+        
+        // Exit reorder mode
+        toggleReorderMode();
+        
+        // Optionally reload to show updated order numbers
+        setTimeout(() => {
+            window.location.reload();
+        }, 1500);
+        
+    } catch (error) {
+        showToast(`Ошибка: ${error.message}`, 'error');
+    } finally {
+        document.getElementById('reorderLoadingOverlay').classList.remove('visible');
+        document.getElementById('saveReorderBtn').disabled = false;
+    }
+}
+
+function cancelReorder() {
+    if (hasChanges) {
+        if (!confirm('Отменить изменения порядка?')) {
+            return;
+        }
+    }
+    
+    // Restore original order
+    if (originalOrder.length > 0) {
+        const tbody = document.querySelector('table tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr.sortable-row'));
+        
+        // Sort rows back to original order
+        originalOrder.forEach(projectId => {
+            const row = rows.find(r => parseInt(r.dataset.projectId) === projectId);
+            if (row) {
+                tbody.appendChild(row);
+            }
+        });
+    }
+    
+    // Exit reorder mode
+    toggleReorderMode();
+}
+
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('reorderToast');
+    const toastText = document.getElementById('reorderToastText');
+    const toastIcon = toast.querySelector('i');
+    
+    toastText.textContent = message;
+    
+    // Update icon and style based on type
+    toast.classList.remove('success', 'error');
+    if (type === 'success') {
+        toast.classList.add('success');
+        toastIcon.className = 'fa-solid fa-check-circle';
+    } else if (type === 'error') {
+        toast.classList.add('error');
+        toastIcon.className = 'fa-solid fa-exclamation-circle';
+    } else {
+        toastIcon.className = 'fa-solid fa-info-circle';
+    }
+    
+    toast.classList.add('visible');
+    
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+        toast.classList.remove('visible');
+    }, 3000);
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    if (isReorderMode) {
+        // Escape to cancel
+        if (e.key === 'Escape') {
+            cancelReorder();
+        }
+        // Ctrl+S to save
+        if (e.ctrlKey && e.key === 's') {
+            e.preventDefault();
+            saveReorder();
+        }
+    }
+});
+</script>
+{% endblock %}

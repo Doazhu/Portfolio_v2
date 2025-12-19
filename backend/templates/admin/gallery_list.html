@@ -1,0 +1,498 @@
+{% extends "list.html" %}
+
+{% block tail_js %}
+{{ super() }}
+
+<!-- Bulk Upload Modal HTML/CSS/JS -->
+<!-- Requirements: 4.2 -->
+<style>
+.bulk-upload-btn {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    color: white;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    margin-left: 10px;
+}
+.bulk-upload-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+.bulk-upload-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 10000;
+    backdrop-filter: blur(4px);
+}
+.bulk-upload-modal-overlay.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.bulk-upload-modal {
+    background: #1f2937;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border: 1px solid #374151;
+}
+.bulk-upload-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid #374151;
+    background: #111827;
+    border-radius: 16px 16px 0 0;
+}
+.bulk-upload-modal-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #e5e7eb;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+.bulk-upload-modal-close {
+    background: #dc2626;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+.bulk-upload-modal-close:hover {
+    background: #b91c1c;
+}
+.bulk-upload-modal-body {
+    padding: 24px;
+    overflow-y: auto;
+}
+
+/* Drag-drop zone */
+.drop-zone {
+    border: 2px dashed #4b5563;
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    background: #111827;
+    cursor: pointer;
+}
+.drop-zone:hover, .drop-zone.drag-over {
+    border-color: #6366f1;
+    background: rgba(99, 102, 241, 0.1);
+}
+.drop-zone-icon {
+    font-size: 3rem;
+    color: #6366f1;
+    margin-bottom: 16px;
+}
+.drop-zone-text {
+    color: #9ca3af;
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+.drop-zone-hint {
+    color: #6b7280;
+    font-size: 0.85rem;
+}
+.drop-zone input[type="file"] {
+    display: none;
+}
+
+/* File list */
+.file-list {
+    margin-top: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+.file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: #111827;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #374151;
+}
+.file-item-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.file-item-preview {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    object-fit: cover;
+    background: #374151;
+}
+.file-item-name {
+    color: #e5e7eb;
+    font-size: 0.9rem;
+}
+.file-item-size {
+    color: #6b7280;
+    font-size: 0.8rem;
+}
+.file-item-remove {
+    background: #dc2626;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: white;
+    cursor: pointer;
+    font-size: 0.75rem;
+}
+.file-item-remove:hover {
+    background: #b91c1c;
+}
+
+/* Progress */
+.upload-progress {
+    margin-top: 20px;
+    display: none;
+}
+.upload-progress.active {
+    display: block;
+}
+.progress-bar-container {
+    background: #374151;
+    border-radius: 8px;
+    height: 8px;
+    overflow: hidden;
+}
+.progress-bar {
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+.progress-text {
+    color: #9ca3af;
+    font-size: 0.85rem;
+    margin-top: 8px;
+    text-align: center;
+}
+
+/* Upload button */
+.upload-submit-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    border: none;
+    border-radius: 8px;
+    padding: 14px 20px;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-top: 20px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.upload-submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+}
+.upload-submit-btn:disabled {
+    background: #374151;
+    cursor: not-allowed;
+}
+
+/* Results */
+.upload-results {
+    margin-top: 20px;
+    display: none;
+}
+.upload-results.active {
+    display: block;
+}
+.upload-success {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid #22c55e;
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: #22c55e;
+    margin-bottom: 10px;
+}
+.upload-error {
+    background: rgba(220, 38, 38, 0.1);
+    border: 1px solid #dc2626;
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: #dc2626;
+    margin-bottom: 10px;
+}
+</style>
+
+<div id="bulkUploadModalOverlay" class="bulk-upload-modal-overlay" onclick="closeBulkUploadModal(event)">
+    <div class="bulk-upload-modal" onclick="event.stopPropagation()">
+        <div class="bulk-upload-modal-header">
+            <div class="bulk-upload-modal-title">
+                <i class="fa-solid fa-images"></i>
+                Массовая загрузка изображений
+            </div>
+            <button class="bulk-upload-modal-close" onclick="closeBulkUploadModal()">
+                <i class="fa-solid fa-times"></i>
+                Закрыть
+            </button>
+        </div>
+        <div class="bulk-upload-modal-body">
+            <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+                <div class="drop-zone-icon">📁</div>
+                <div class="drop-zone-text">Перетащите изображения сюда или нажмите для выбора</div>
+                <div class="drop-zone-hint">Поддерживаются: JPG, PNG, GIF, WebP, SVG (макс. 5MB каждый)</div>
+                <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.gif,.webp,.svg">
+            </div>
+            
+            <div class="file-list" id="fileList"></div>
+            
+            <div class="upload-progress" id="uploadProgress">
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="progress-text" id="progressText">Загрузка...</div>
+            </div>
+            
+            <div class="upload-results" id="uploadResults"></div>
+            
+            <button class="upload-submit-btn" id="uploadSubmitBtn" onclick="submitBulkUpload()" disabled>
+                <i class="fa-solid fa-cloud-upload-alt"></i>
+                Загрузить изображения
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+let selectedFiles = [];
+
+// Add bulk upload button to the page
+document.addEventListener('DOMContentLoaded', function() {
+    // Find the create button and add bulk upload button next to it
+    const createBtn = document.querySelector('a[href*="create"]');
+    if (createBtn) {
+        const bulkBtn = document.createElement('button');
+        bulkBtn.className = 'bulk-upload-btn';
+        bulkBtn.innerHTML = '<i class="fa-solid fa-images"></i> Массовая загрузка';
+        bulkBtn.onclick = openBulkUploadModal;
+        createBtn.parentNode.insertBefore(bulkBtn, createBtn.nextSibling);
+    }
+});
+
+function openBulkUploadModal() {
+    document.getElementById('bulkUploadModalOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    resetUploadModal();
+}
+
+function closeBulkUploadModal(event) {
+    if (event && event.target !== document.getElementById('bulkUploadModalOverlay')) {
+        return;
+    }
+    document.getElementById('bulkUploadModalOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function resetUploadModal() {
+    selectedFiles = [];
+    document.getElementById('fileList').innerHTML = '';
+    document.getElementById('uploadProgress').classList.remove('active');
+    document.getElementById('uploadResults').classList.remove('active');
+    document.getElementById('uploadResults').innerHTML = '';
+    document.getElementById('uploadSubmitBtn').disabled = true;
+    document.getElementById('progressBar').style.width = '0%';
+}
+
+// Drag and drop handlers
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+
+dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('drag-over');
+});
+
+dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('drag-over');
+});
+
+dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    handleFiles(e.dataTransfer.files);
+});
+
+fileInput.addEventListener('change', (e) => {
+    handleFiles(e.target.files);
+});
+
+function handleFiles(files) {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    
+    for (const file of files) {
+        if (!allowedTypes.includes(file.type)) {
+            alert(`Файл ${file.name} имеет неподдерживаемый формат`);
+            continue;
+        }
+        if (file.size > maxSize) {
+            alert(`Файл ${file.name} превышает максимальный размер 5MB`);
+            continue;
+        }
+        if (!selectedFiles.find(f => f.name === file.name && f.size === file.size)) {
+            selectedFiles.push(file);
+        }
+    }
+    
+    renderFileList();
+    document.getElementById('uploadSubmitBtn').disabled = selectedFiles.length === 0;
+}
+
+function renderFileList() {
+    const fileList = document.getElementById('fileList');
+    fileList.innerHTML = '';
+    
+    selectedFiles.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const item = document.createElement('div');
+            item.className = 'file-item';
+            item.innerHTML = `
+                <div class="file-item-info">
+                    <img src="${e.target.result}" class="file-item-preview" alt="${file.name}">
+                    <div>
+                        <div class="file-item-name">${file.name}</div>
+                        <div class="file-item-size">${formatFileSize(file.size)}</div>
+                    </div>
+                </div>
+                <button class="file-item-remove" onclick="removeFile(${index})">
+                    <i class="fa-solid fa-times"></i> Удалить
+                </button>
+            `;
+            fileList.appendChild(item);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function removeFile(index) {
+    selectedFiles.splice(index, 1);
+    renderFileList();
+    document.getElementById('uploadSubmitBtn').disabled = selectedFiles.length === 0;
+}
+
+function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+async function submitBulkUpload() {
+    if (selectedFiles.length === 0) return;
+    
+    const submitBtn = document.getElementById('uploadSubmitBtn');
+    const progressDiv = document.getElementById('uploadProgress');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const resultsDiv = document.getElementById('uploadResults');
+    
+    submitBtn.disabled = true;
+    progressDiv.classList.add('active');
+    resultsDiv.classList.remove('active');
+    resultsDiv.innerHTML = '';
+    
+    const formData = new FormData();
+    selectedFiles.forEach(file => {
+        formData.append('files', file);
+    });
+    
+    try {
+        progressText.textContent = `Загрузка ${selectedFiles.length} файлов...`;
+        progressBar.style.width = '50%';
+        
+        const response = await fetch('/admin/api/gallery/bulk', {
+            method: 'POST',
+            body: formData
+        });
+        
+        progressBar.style.width = '100%';
+        
+        const result = await response.json();
+        
+        resultsDiv.classList.add('active');
+        
+        if (result.total_created > 0) {
+            resultsDiv.innerHTML += `
+                <div class="upload-success">
+                    <i class="fa-solid fa-check-circle"></i>
+                    Успешно загружено: ${result.total_created} изображений
+                </div>
+            `;
+        }
+        
+        if (result.total_errors > 0) {
+            let errorHtml = `<div class="upload-error"><i class="fa-solid fa-exclamation-circle"></i> Ошибки (${result.total_errors}):<ul>`;
+            result.errors.forEach(err => {
+                errorHtml += `<li>${err.filename}: ${err.error}</li>`;
+            });
+            errorHtml += '</ul></div>';
+            resultsDiv.innerHTML += errorHtml;
+        }
+        
+        if (result.total_created > 0) {
+            // Refresh the page after 2 seconds to show new images
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        }
+        
+    } catch (error) {
+        resultsDiv.classList.add('active');
+        resultsDiv.innerHTML = `
+            <div class="upload-error">
+                <i class="fa-solid fa-exclamation-circle"></i>
+                Ошибка загрузки: ${error.message}
+            </div>
+        `;
+    }
+    
+    progressDiv.classList.remove('active');
+    submitBtn.disabled = false;
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeBulkUploadModal();
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,700 @@
+{% extends "admin/layout.html" %}
+
+{% block content %}
+<!-- Statistics Dashboard -->
+<!-- Requirements: 7.1, 7.2, 7.3 -->
+<style>
+/* Glassmorphism Stats Dashboard Styles */
+.stats-dashboard {
+    padding: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.stats-header {
+    margin-bottom: 32px;
+}
+
+.stats-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #e5e7eb;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.stats-subtitle {
+    color: #9ca3af;
+    font-size: 0.95rem;
+}
+
+/* Stats Cards Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+}
+
+.stats-card {
+    background: rgba(31, 41, 55, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(55, 65, 81, 0.5);
+    border-radius: 16px;
+    padding: 24px;
+    transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+.stats-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.stats-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.stats-card-icon.projects {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+}
+
+.stats-card-icon.gallery {
+    background: linear-gradient(135deg, #ec4899, #f43f5e);
+}
+
+.stats-card-icon.messages {
+    background: linear-gradient(135deg, #22c55e, #10b981);
+}
+
+.stats-card-badge {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.stats-card-badge.live {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+}
+
+.stats-card-badge.unread {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.stats-card-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #e5e7eb;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.stats-card-label {
+    color: #9ca3af;
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+}
+
+.stats-card-breakdown {
+    display: flex;
+    gap: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(55, 65, 81, 0.5);
+}
+
+.breakdown-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.breakdown-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #e5e7eb;
+}
+
+.breakdown-label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Distribution Section */
+.distribution-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+}
+
+.distribution-card {
+    background: rgba(31, 41, 55, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(55, 65, 81, 0.5);
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.distribution-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #e5e7eb;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.distribution-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.distribution-bar-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.distribution-bar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.distribution-bar-label {
+    color: #9ca3af;
+    font-size: 0.85rem;
+}
+
+.distribution-bar-value {
+    color: #e5e7eb;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.distribution-bar-track {
+    height: 8px;
+    background: rgba(55, 65, 81, 0.5);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.distribution-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.distribution-bar-fill.live {
+    background: linear-gradient(90deg, #22c55e, #10b981);
+}
+
+.distribution-bar-fill.draft {
+    background: linear-gradient(90deg, #6b7280, #4b5563);
+}
+
+.distribution-bar-fill.static {
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+}
+
+.distribution-bar-fill.external {
+    background: linear-gradient(90deg, #8b5cf6, #a855f7);
+}
+
+.distribution-bar-fill.linked {
+    background: linear-gradient(90deg, #ec4899, #f43f5e);
+}
+
+.distribution-bar-fill.standalone {
+    background: linear-gradient(90deg, #f59e0b, #f97316);
+}
+
+/* Activity Timeline */
+.activity-section {
+    background: rgba(31, 41, 55, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(55, 65, 81, 0.5);
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.activity-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #e5e7eb;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.activity-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.activity-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(55, 65, 81, 0.3);
+    transition: background 0.2s ease;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-item:hover {
+    background: rgba(55, 65, 81, 0.2);
+    margin: 0 -12px;
+    padding: 16px 12px;
+    border-radius: 8px;
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.activity-icon.project {
+    background: rgba(99, 102, 241, 0.2);
+    color: #6366f1;
+}
+
+.activity-icon.image {
+    background: rgba(236, 72, 153, 0.2);
+    color: #ec4899;
+}
+
+.activity-icon.message {
+    background: rgba(34, 197, 94, 0.2);
+    color: #22c55e;
+}
+
+.activity-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.activity-description {
+    color: #e5e7eb;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.activity-time {
+    color: #6b7280;
+    font-size: 0.8rem;
+}
+
+.activity-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6b7280;
+}
+
+.activity-empty-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+/* Loading skeleton */
+.skeleton {
+    background: linear-gradient(90deg, rgba(55, 65, 81, 0.3) 25%, rgba(75, 85, 99, 0.3) 50%, rgba(55, 65, 81, 0.3) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.skeleton-value {
+    height: 40px;
+    width: 80px;
+    margin-bottom: 8px;
+}
+
+.skeleton-text {
+    height: 16px;
+    width: 120px;
+}
+
+/* Refresh button */
+.refresh-btn {
+    background: rgba(55, 65, 81, 0.5);
+    border: 1px solid rgba(75, 85, 99, 0.5);
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: #9ca3af;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.refresh-btn:hover {
+    background: rgba(99, 102, 241, 0.2);
+    border-color: rgba(99, 102, 241, 0.5);
+    color: #e5e7eb;
+}
+
+.refresh-btn.loading i {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+</style>
+
+<div class="stats-dashboard">
+    <div class="stats-header">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+                <h1 class="stats-title">
+                    <i class="fa-solid fa-chart-line"></i>
+                    Статистика
+                </h1>
+                <p class="stats-subtitle">Обзор активности и метрик портфолио</p>
+            </div>
+            <button class="refresh-btn" onclick="refreshStats()" id="refreshBtn">
+                <i class="fa-solid fa-sync-alt"></i>
+                Обновить
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Stats Cards -->
+    <div class="stats-grid" id="statsGrid">
+        <!-- Projects Card -->
+        <div class="stats-card">
+            <div class="stats-card-header">
+                <div class="stats-card-icon projects">
+                    <i class="fa-solid fa-folder-open"></i>
+                </div>
+                <span class="stats-card-badge live" id="liveBadge">
+                    <span id="liveCount">0</span> Live
+                </span>
+            </div>
+            <div class="stats-card-value" id="totalProjects">
+                <div class="skeleton skeleton-value"></div>
+            </div>
+            <div class="stats-card-label">Всего проектов</div>
+            <div class="stats-card-breakdown">
+                <div class="breakdown-item">
+                    <span class="breakdown-value" id="staticCount">0</span>
+                    <span class="breakdown-label">Static</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-value" id="externalCount">0</span>
+                    <span class="breakdown-label">External</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-value" id="draftCount">0</span>
+                    <span class="breakdown-label">Draft</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gallery Card -->
+        <div class="stats-card">
+            <div class="stats-card-header">
+                <div class="stats-card-icon gallery">
+                    <i class="fa-solid fa-images"></i>
+                </div>
+            </div>
+            <div class="stats-card-value" id="totalGallery">
+                <div class="skeleton skeleton-value"></div>
+            </div>
+            <div class="stats-card-label">Изображений в галерее</div>
+            <div class="stats-card-breakdown">
+                <div class="breakdown-item">
+                    <span class="breakdown-value" id="linkedCount">0</span>
+                    <span class="breakdown-label">К проектам</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-value" id="standaloneCount">0</span>
+                    <span class="breakdown-label">Standalone</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages Card -->
+        <div class="stats-card">
+            <div class="stats-card-header">
+                <div class="stats-card-icon messages">
+                    <i class="fa-solid fa-envelope"></i>
+                </div>
+                <span class="stats-card-badge unread" id="unreadBadge">
+                    <span id="unreadCount">0</span> Новых
+                </span>
+            </div>
+            <div class="stats-card-value" id="totalMessages">
+                <div class="skeleton skeleton-value"></div>
+            </div>
+            <div class="stats-card-label">Всего сообщений</div>
+        </div>
+    </div>
+
+    <!-- Distribution Charts -->
+    <div class="distribution-section">
+        <!-- Project Status Distribution -->
+        <div class="distribution-card">
+            <h3 class="distribution-title">
+                <i class="fa-solid fa-chart-pie"></i>
+                Статус проектов
+            </h3>
+            <div class="distribution-bars">
+                <div class="distribution-bar-item">
+                    <div class="distribution-bar-header">
+                        <span class="distribution-bar-label">🟢 Live</span>
+                        <span class="distribution-bar-value" id="livePercent">0%</span>
+                    </div>
+                    <div class="distribution-bar-track">
+                        <div class="distribution-bar-fill live" id="liveBar" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="distribution-bar-item">
+                    <div class="distribution-bar-header">
+                        <span class="distribution-bar-label">⚫ Draft</span>
+                        <span class="distribution-bar-value" id="draftPercent">0%</span>
+                    </div>
+                    <div class="distribution-bar-track">
+                        <div class="distribution-bar-fill draft" id="draftBar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Type Distribution -->
+        <div class="distribution-card">
+            <h3 class="distribution-title">
+                <i class="fa-solid fa-layer-group"></i>
+                Типы проектов
+            </h3>
+            <div class="distribution-bars">
+                <div class="distribution-bar-item">
+                    <div class="distribution-bar-header">
+                        <span class="distribution-bar-label">📦 Static</span>
+                        <span class="distribution-bar-value" id="staticPercent">0%</span>
+                    </div>
+                    <div class="distribution-bar-track">
+                        <div class="distribution-bar-fill static" id="staticBar" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="distribution-bar-item">
+                    <div class="distribution-bar-header">
+                        <span class="distribution-bar-label">🔗 External</span>
+                        <span class="distribution-bar-value" id="externalPercent">0%</span>
+                    </div>
+                    <div class="distribution-bar-track">
+                        <div class="distribution-bar-fill external" id="externalBar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Timeline -->
+    <div class="activity-section">
+        <h3 class="activity-title">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            Последняя активность
+        </h3>
+        <div class="activity-timeline" id="activityTimeline">
+            <div class="activity-empty">
+                <div class="activity-empty-icon">📊</div>
+                <p>Загрузка активности...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Fetch and display statistics
+async function loadStats() {
+    try {
+        const response = await fetch('/admin/api/stats');
+        const data = await response.json();
+        
+        // Update project stats
+        document.getElementById('totalProjects').textContent = data.projects.total;
+        document.getElementById('liveCount').textContent = data.projects.live;
+        document.getElementById('draftCount').textContent = data.projects.draft;
+        document.getElementById('staticCount').textContent = data.projects.static_count;
+        document.getElementById('externalCount').textContent = data.projects.external_count;
+        
+        // Update gallery stats
+        document.getElementById('totalGallery').textContent = data.gallery.total;
+        document.getElementById('linkedCount').textContent = data.gallery.linked_to_projects;
+        document.getElementById('standaloneCount').textContent = data.gallery.standalone;
+        
+        // Update message stats
+        document.getElementById('totalMessages').textContent = data.messages.total;
+        document.getElementById('unreadCount').textContent = data.messages.unread;
+        
+        // Update unread badge visibility
+        const unreadBadge = document.getElementById('unreadBadge');
+        if (data.messages.unread === 0) {
+            unreadBadge.style.display = 'none';
+        } else {
+            unreadBadge.style.display = 'inline';
+        }
+        
+        // Calculate and update distribution bars
+        const totalProjects = data.projects.total || 1;
+        
+        const livePercent = Math.round((data.projects.live / totalProjects) * 100);
+        const draftPercent = Math.round((data.projects.draft / totalProjects) * 100);
+        const staticPercent = Math.round((data.projects.static_count / totalProjects) * 100);
+        const externalPercent = Math.round((data.projects.external_count / totalProjects) * 100);
+        
+        document.getElementById('livePercent').textContent = livePercent + '%';
+        document.getElementById('draftPercent').textContent = draftPercent + '%';
+        document.getElementById('staticPercent').textContent = staticPercent + '%';
+        document.getElementById('externalPercent').textContent = externalPercent + '%';
+        
+        document.getElementById('liveBar').style.width = livePercent + '%';
+        document.getElementById('draftBar').style.width = draftPercent + '%';
+        document.getElementById('staticBar').style.width = staticPercent + '%';
+        document.getElementById('externalBar').style.width = externalPercent + '%';
+        
+        // Update activity timeline
+        updateActivityTimeline(data.recent_activity);
+        
+    } catch (error) {
+        console.error('Failed to load stats:', error);
+        document.getElementById('activityTimeline').innerHTML = `
+            <div class="activity-empty">
+                <div class="activity-empty-icon">⚠️</div>
+                <p>Ошибка загрузки статистики</p>
+            </div>
+        `;
+    }
+}
+
+function updateActivityTimeline(activities) {
+    const timeline = document.getElementById('activityTimeline');
+    
+    if (!activities || activities.length === 0) {
+        timeline.innerHTML = `
+            <div class="activity-empty">
+                <div class="activity-empty-icon">📭</div>
+                <p>Нет недавней активности</p>
+            </div>
+        `;
+        return;
+    }
+    
+    timeline.innerHTML = activities.map(activity => {
+        let iconClass = 'project';
+        let icon = 'fa-folder-open';
+        
+        if (activity.type === 'image_uploaded') {
+            iconClass = 'image';
+            icon = 'fa-image';
+        } else if (activity.type === 'message_received') {
+            iconClass = 'message';
+            icon = 'fa-envelope';
+        }
+        
+        const timestamp = new Date(activity.timestamp);
+        const timeAgo = formatTimeAgo(timestamp);
+        
+        return `
+            <div class="activity-item">
+                <div class="activity-icon ${iconClass}">
+                    <i class="fa-solid ${icon}"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-description">${escapeHtml(activity.description)}</div>
+                    <div class="activity-time">${timeAgo}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function formatTimeAgo(date) {
+    const now = new Date();
+    const diffMs = now - date;
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHour = Math.floor(diffMin / 60);
+    const diffDay = Math.floor(diffHour / 24);
+    
+    if (diffSec < 60) return 'Только что';
+    if (diffMin < 60) return `${diffMin} мин. назад`;
+    if (diffHour < 24) return `${diffHour} ч. назад`;
+    if (diffDay < 7) return `${diffDay} дн. назад`;
+    
+    return date.toLocaleDateString('ru-RU', {
+        day: 'numeric',
+        month: 'short',
+        year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+    });
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+async function refreshStats() {
+    const btn = document.getElementById('refreshBtn');
+    btn.classList.add('loading');
+    btn.disabled = true;
+    
+    await loadStats();
+    
+    setTimeout(() => {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+    }, 500);
+}
+
+// Load stats on page load
+document.addEventListener('DOMContentLoaded', loadStats);
+</script>
+{% endblock %}
